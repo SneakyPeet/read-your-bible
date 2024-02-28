@@ -1,0 +1,43 @@
+{:source-paths
+ ["src"
+  "test"
+  "firebase"]
+
+ :dependencies
+ [[reagent "1.2.0"]
+  [re-frame "1.4.3"]
+  [cider/cider-nrepl "0.45.0"]
+  #_[tongue "0.4.4"]]
+
+ #_#_:dev-http
+   {3020 "firebase/public"}
+
+ :builds
+ {#_#_:web {:target :browser
+            :output-dir "firebase/public/js"
+            :asset-path "/js"
+            :module-hash-names true
+
+            :compiler-options
+            {;; set this to solve the "failed to convert sources" issue in firestore
+             :output-feature-set :es7}
+
+            :build-hooks [(dev.deploy/reset-for-dev-hook)]
+
+            :dev {:modules {:main {:entries [dev.core]
+                                   :init-fn dev.core/init!}}
+
+                  :closure-defines {dev.firebase.core/use-auth-emulator? true
+                                    dev.firebase.core/use-firestore-emulator? true
+                                    dev.firebase.core/use-storage-emulator? true
+                                    dev.firebase.core/use-functions-emulator-from-web? true}}
+
+            :release {:modules {:main {:entries [feedme.web]
+                                       :init-fn feedme.web/init!}}
+                      :build-hooks [(dev.deploy/app-post-build-release-hook)]}}
+
+  #_#_:functions {:target           :node-library
+                  :js-options       {:js-package-dirs ["firebase/functions/node_modules"]}
+                  :compiler-options {:infer-externs :auto}
+                  :output-to        "firebase/functions/index.js"
+                  :exports-var      feedme.functions/exports}}}
