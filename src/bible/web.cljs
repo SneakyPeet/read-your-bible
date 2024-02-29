@@ -3,16 +3,17 @@
             [re-frame.core :as rf]
             [goog.dom :as gdom]
             ["react-dom/client" :refer [createRoot]]
-            [bible.firebase]
+            [bible.firebase.config]
             #_[feedme.components.fx]
 
-            #_[feedme.navigation.state :as navigation.state]
+            [bible.navigation.state :as navigation.state]
+            [bible.navigation.events]
+            [bible.navigation.views :as navigation.views]
+            [bible.navigation.routes :as navigation.routes]
 
-            #_[feedme.authentication.events :as authentication.events]
-            #_[feedme.authentication.state :as authentication.state]
+            [bible.authentication.events :as authentication.events]
+            [bible.authentication.state :as authentication.state]
 
-            #_[feedme.navigation.events]
-            #_[feedme.navigation.views :as navigation.views]
 
             #_[feedme.notebooks.state :as notebooks.state]))
 
@@ -20,26 +21,26 @@
 ;; Initial App State
 
 (defn- initial-state []
-  {}
-  #_(merge
+  (merge
     (navigation.state/initial-state)
     (authentication.state/initial-state)
-    (notebooks.state/initial-state)))
+  ;;  (notebooks.state/initial-state)
+    ))
 
 
 (rf/reg-event-fx
   :app/initialize
   (fn [_ _]
     {:db (initial-state)
-     ;;:dispatch [::authentication.events/initialize]
+     :dispatch [::authentication.events/initialize]
      }))
 
 
 (rf/reg-event-fx
   :app/reset
   (fn [_ _]
-    {:db       (initial-state)
-     #_#_:goto :page/login-page}))
+    {:db  (initial-state)
+     :goto navigation.routes/login-page}))
 
 
 ;; Entry point
@@ -49,10 +50,8 @@
 
 (defonce root (createRoot (gdom/getElement root-element-id)))
 
-(defn temp [] [:div [:h1 "HI"]])
-
 (defn render! []
-  (.render root (r/as-element [temp #_feedme.navigation.views/current-page])))
+  (.render root (r/as-element [bible.navigation.views/current-page])))
 
 
 (defn init! []

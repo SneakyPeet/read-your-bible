@@ -1,4 +1,4 @@
-(ns bible.firebase
+(ns bible.firebase.config
   (:require [shadow.resource :as rc]
             ["firebase/app" :as firebase-app]))
 
