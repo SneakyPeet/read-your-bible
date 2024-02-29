@@ -1,8 +1,9 @@
 {
-  "apiKey": "",
-  "authDomain": "",
-  "projectId": "",
-  "storageBucket": "",
-  "messagingSenderId": "",
-  "appId": ""
+  "apiKey": "AIzaSyBeVhLMLlFA9pA3wPQ_sQoauRir8UQqDug",
+  "authDomain": "bible-reading-plan-8e594.firebaseapp.com",
+  "databaseURL": "https://bible-reading-plan-8e594-default-rtdb.europe-west1.firebasedatabase.app",
+  "projectId": "bible-reading-plan-8e594",
+  "storageBucket": "bible-reading-plan-8e594.appspot.com",
+  "messagingSenderId": "129651779188",
+  "appId": "1:129651779188:web:2fa871b39103e9dfd01321"
 }

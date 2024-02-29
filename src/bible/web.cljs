@@ -31,7 +31,8 @@
   :app/initialize
   (fn [_ _]
     {:db (initial-state)
-     :dispatch [#_::authentication.events/initialize]}))
+     ;;:dispatch [::authentication.events/initialize]
+     }))
 
 
 (rf/reg-event-fx
