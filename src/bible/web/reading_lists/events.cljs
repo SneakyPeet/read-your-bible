@@ -49,13 +49,9 @@
 (rf/reg-event-fx
   ::increment-read-list-index
   (fn [{:keys [db]} [_ read-list-id]]
-    (let [doc-ref (reading-lists.db/reading-list-doc-ref read-list-id)
-          read-list (-> (reading-lists.state/read-list db read-list-id)
-                        (domain.reading-lists/increment-reading-list (firestore/Timestamp.now)))]
-      {::firestore-fx/set-doc {:doc doc-ref
-                               :data read-list
-                               ;; :on-error [:TODO]
-                               }})))
+    (let [read-list (reading-lists.state/read-list db read-list-id)]
+      {::firestore-fx/write-batch
+       {:mutations (reading-lists.db/increment-reading-list-mutations read-list)}})))
 
 
 (defn increment-reading-list-index [read-list-id]
