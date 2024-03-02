@@ -43,6 +43,13 @@
      :goto navigation.routes/login-page}))
 
 
+;; This still feels bad, but feels better than having the events inside the auth
+(rf/reg-event-fx
+  :app/logged-in
+  (fn [_ _]
+    {}))
+
+
 ;; Entry point
 
 

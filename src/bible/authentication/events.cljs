@@ -3,7 +3,6 @@
             ["firebase/auth" :as firebase-auth]
             [bible.authentication.models :as authentication.models]
             [bible.authentication.state :as authentication.state]
-            #_[bible.notebooks.events :as notebooks.events]
             [bible.firebase.firestore :as firestore-fx]
             [bible.navigation.routes :as navigation.routes]))
 
@@ -27,8 +26,8 @@
   (fn [{:keys [db]} [_ firebase-user]]
     {:db (authentication.state/login db (authentication.models/firebase-auth-user->user firebase-user))
      :goto (navigation.routes/logged-in-route)
-     ;;:dispatch [::notebooks.events/subscribe-to-notebooks-changes]
-     })) ;; TODO
+     :dispatch [:app/logged-in]
+     }))
 
 
 (rf/reg-event-fx

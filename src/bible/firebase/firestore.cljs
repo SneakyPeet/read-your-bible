@@ -1,6 +1,7 @@
 (ns bible.firebase.firestore
   (:require [re-frame.core :as rf]
-            ["firebase/firestore" :as firestore]))
+            ["firebase/firestore" :as firestore]
+            [bible.firebase.config :as firebase]))
 
 
 (rf/reg-fx
@@ -28,6 +29,31 @@
                   (js/console.error err)
                   (when on-error
                     (rf/dispatch (conj on-error err))))))))
+
+
+;; [[:set doc-ref data]
+;;  [:update doc-ref data]
+;;  [:delete doc-ref]]
+(rf/reg-fx
+  ::write-batch
+  (fn [{:keys [mutations on-success on-error]}]
+    (let [batch (firestore/writeBatch firebase/db)]
+      (doseq [[t doc-ref data] mutations]
+        (cond
+          (= :set t)
+          (.set batch doc-ref (clj->js data))
+          (= :update t)
+          (.update batch doc-ref (clj->js data))
+          (= :delete t)
+          (.delete batch)))
+      (-> (.commit batch)
+          (.then (fn []
+                   (when on-success
+                     (rf/dispatch on-success))))
+          (.catch (fn [err]
+                    (js/console.error err)
+                    (when on-error
+                      (rf/dispatch (conj on-error err)))))))))
 
 
 (defonce ^:private *on-snapshot-subs (atom {}))
