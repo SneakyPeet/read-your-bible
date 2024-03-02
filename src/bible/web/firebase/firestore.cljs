@@ -37,7 +37,7 @@
 (rf/reg-fx
   ::write-batch
   (fn [{:keys [mutations on-success on-error]}]
-    (let [batch (firestore/writeBatch firebase/db)]
+    (let [batch (firestore/writeBatch firebase/firestore)]
       (doseq [[t doc-ref data] mutations]
         (cond
           (= :set t)

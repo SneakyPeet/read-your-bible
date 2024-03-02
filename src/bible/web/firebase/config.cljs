@@ -7,4 +7,4 @@
 
 (def app (firebase-app/initializeApp firebase-config))
 
-(def db (firestore/getFirestore app))
+(def firestore (firestore/getFirestore app))

@@ -1,7 +1,7 @@
 (ns bible.web.authentication.events
   (:require [re-frame.core :as rf]
             ["firebase/auth" :as firebase-auth]
-            [bible.web.authentication.models :as authentication.models]
+            [bible.domain.users :as users]
             [bible.web.authentication.state :as authentication.state]))
 
 
@@ -24,7 +24,7 @@
   ::logged-in
   (fn [{:keys [db]} [_ firebase-user]]
     {:db (authentication.state/login
-           db (authentication.models/firebase-auth-user->user firebase-user))
+           db (users/firebase-auth-user->user firebase-user))
      :dispatch (authentication.state/logged-in-event db)}))
 
 

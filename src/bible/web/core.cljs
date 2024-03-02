@@ -14,8 +14,10 @@
             [bible.web.authentication.events :as authentication.events]
             [bible.web.authentication.state :as authentication.state]
 
-            [bible.web.firebase.firestore :as firestore-fx]
-            #_[feedme.notebooks.state :as notebooks.state]))
+            [bible.web.reading-lists.state :as reading-lists.state]
+            [bible.web.reading-lists.events :as reading-lists.events]
+
+            [bible.web.firebase.firestore :as firestore-fx]))
 
 
 ;; Initial App State
@@ -24,8 +26,7 @@
   (merge
     (navigation.state/initial-state)
     (authentication.state/initial-state [::logged-in] [::logged-out])
-  ;;  (notebooks.state/initial-state)
-    ))
+    (reading-lists.state/initial-state)))
 
 
 (rf/reg-event-fx
@@ -46,8 +47,8 @@
   ::logged-in
   (fn [_ _]
     {:goto  navigation.routes/dashboard-page
-     #_#_:dispatch [] ;;TODO
-     }))
+     :dispatch reading-lists.events/initialize-lists-event}))
+
 
 (rf/reg-event-fx
   ::logged-out
