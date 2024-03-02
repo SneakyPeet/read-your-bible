@@ -1,7 +1,7 @@
-(ns bible.firebase.firestore
+(ns bible.web.firebase.firestore
   (:require [re-frame.core :as rf]
             ["firebase/firestore" :as firestore]
-            [bible.firebase.config :as firebase]))
+            [bible.web.firebase.config :as firebase]))
 
 
 (rf/reg-fx

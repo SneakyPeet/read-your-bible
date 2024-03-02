@@ -1,6 +1,6 @@
-(ns bible.authentication.subs
+(ns bible.web.authentication.subs
   (:require [re-frame.core :as rf]
-            [bible.authentication.state :as authentication.state]))
+            [bible.web.authentication.state :as authentication.state]))
 
 
 (rf/reg-sub

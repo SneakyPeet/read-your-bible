@@ -1,5 +1,5 @@
-(ns bible.authentication.views
-  (:require [bible.authentication.events :as authentication.events]))
+(ns bible.web.authentication.views
+  (:require [bible.web.authentication.events :as authentication.events]))
 
 
 (defn login-page []

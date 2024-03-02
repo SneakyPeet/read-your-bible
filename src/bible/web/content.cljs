@@ -1,4 +1,4 @@
-(ns bible.content
+(ns bible.web.content
   (:require [tongue.core :as tongue]))
 
 (def ^:private default-dict :en)

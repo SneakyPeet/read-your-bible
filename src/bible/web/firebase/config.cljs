@@ -1,4 +1,4 @@
-(ns bible.firebase.config
+(ns bible.web.firebase.config
   (:require [shadow.resource :as rc]
             ["firebase/app" :as firebase-app]
             ["firebase/firestore" :as firestore]))
@@ -7,4 +7,4 @@
 
 (def app (firebase-app/initializeApp firebase-config))
 
-(def db (firestore/get app))
+(def db (firestore/getFirestore app))

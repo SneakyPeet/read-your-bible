@@ -1,4 +1,4 @@
-(ns bible.authentication.models)
+(ns bible.web.authentication.models)
 
 (defn firebase-auth-user->user
   [auth-user]

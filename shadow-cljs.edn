@@ -32,8 +32,8 @@
                                 dev.firebase.core/use-storage-emulator? false
                                 dev.firebase.core/use-functions-emulator-from-web? false}}
 
-        :release {:modules {:main {:entries [bible.web]
-                                   :init-fn bible.web/init!}}
+        :release {:modules {:main {:entries [bible.web.core]
+                                   :init-fn bible.web.core/init!}}
                   :build-hooks [(dev.deploy/app-post-build-release-hook)]}}
 
   #_#_:functions {:target           :node-library

@@ -1,6 +1,6 @@
-(ns bible.navigation.events
+(ns bible.web.navigation.events
   (:require [re-frame.core :as rf]
-            [bible.navigation.state :as state]))
+            [bible.web.navigation.state :as state]))
 
 
 (rf/reg-event-db

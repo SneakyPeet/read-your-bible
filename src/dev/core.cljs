@@ -1,6 +1,6 @@
 (ns dev.core
-  (:require [bible.firebase.config]
-            [bible.web :as web]
+  (:require [bible.web.firebase.config]
+            [bible.web.core :as web]
             [dev.firebase.core :as firebase-dev]))
 
 

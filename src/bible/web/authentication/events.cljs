@@ -1,10 +1,8 @@
-(ns bible.authentication.events
+(ns bible.web.authentication.events
   (:require [re-frame.core :as rf]
             ["firebase/auth" :as firebase-auth]
-            [bible.authentication.models :as authentication.models]
-            [bible.authentication.state :as authentication.state]
-            [bible.firebase.firestore :as firestore-fx]
-            [bible.navigation.routes :as navigation.routes]))
+            [bible.web.authentication.models :as authentication.models]
+            [bible.web.authentication.state :as authentication.state]))
 
 
 (def auth (firebase-auth/getAuth))
@@ -20,28 +18,27 @@
   (fn [_ _]
     {::firebase-on-auth-state-changed [::logged-in ::logged-out]}))
 
+(def initialize-evt [::initialize])
 
 (rf/reg-event-fx
   ::logged-in
   (fn [{:keys [db]} [_ firebase-user]]
-    {:db (authentication.state/login db (authentication.models/firebase-auth-user->user firebase-user))
-     :goto (navigation.routes/logged-in-route)
-     :dispatch [:app/logged-in]
-     }))
+    {:db (authentication.state/login
+           db (authentication.models/firebase-auth-user->user firebase-user))
+     :dispatch (authentication.state/logged-in-event db)}))
 
 
 (rf/reg-event-fx
   ::logged-out
   (fn [{:keys [db]} _]
-    {:db   (authentication.state/logout db)
-     :dispatch [:app/reset]
-     :goto navigation.routes/login-page
-     ::firestore-fx/unsub-all-snapshots nil}))
+    {:db (authentication.state/logout db)
+     :dispatch (authentication.state/logged-out-event db)}))
 
 
 (rf/reg-fx
   ::firebase-on-auth-state-changed
   (fn [[signed-in-evt signed-out-evt]]
+    (prn ::firebase-on-auth-state-changed)
     (firebase-auth/onAuthStateChanged
       auth
       (fn [firebase-user]

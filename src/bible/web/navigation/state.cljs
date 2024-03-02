@@ -1,5 +1,5 @@
-(ns bible.navigation.state
-  (:require [bible.navigation.routes :as navigation.routes]))
+(ns bible.web.navigation.state
+  (:require [bible.web.navigation.routes :as navigation.routes]))
 
 
 (defn initial-state []

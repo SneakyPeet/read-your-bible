@@ -1,6 +1,6 @@
-(ns bible.navigation.subs
+(ns bible.web.navigation.subs
   (:require [re-frame.core :as rf]
-            [bible.navigation.state :as state]))
+            [bible.web.navigation.state :as state]))
 
 (rf/reg-sub
   ::current-page

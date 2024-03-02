@@ -1,4 +1,4 @@
-(ns bible.components.core
+(ns bible.web.components.core
   (:require [re-frame.core :as rf]))
 
 
