@@ -8,7 +8,7 @@
 
 (def readling-lists-collection (firestore/collection firebase/firestore reading-lists-table-name))
 
-(defn readling-lists-subscribe-query [user-id]
+(defn reading-lists-subscribe-query [user-id]
   (firestore/query
     readling-lists-collection
     (firestore/where "user-id" "==" user-id)))
@@ -21,3 +21,7 @@
                  [:set
                   docref
                   (domain.reading-lists/init-default-reading-list % (.-id docref) user-id date)])))))
+
+
+(defn reading-list-doc-ref [read-list-id]
+  (firestore/doc firebase/firestore reading-lists-table-name read-list-id))

@@ -9,13 +9,11 @@
   (fn [db]
     (->> (reading-lists.state/reading-lists db)
          (sort-by :position)
-         (map (fn [{:keys [id current-book current-chapter title read-index] :as reading-list}]
+         (map (fn [{:keys [id current-book current-chapter title] :as reading-list}]
                 {:id id
                  :title title
                  :chapter (str (domain.books/book-title current-book) " " current-chapter)
-                 :read-index read-index
-                 :data reading-list}
-                )))))
+                 :data reading-list})))))
 
 
 (def reading-lists-view ::reading-lists-view)
