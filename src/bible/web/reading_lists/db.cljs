@@ -1,7 +1,7 @@
 (ns bible.web.reading-lists.db
   (:require [bible.web.firebase.config :as firebase]
-            [bible.core :as core]
-            ["firebase/firestore" :as firestore]))
+            ["firebase/firestore" :as firestore]
+            [bible.domain.reading-lists :as domain.reading-lists]))
 
 
 (def reading-lists-table-name "reading-lists")
@@ -15,12 +15,9 @@
 
 
 (defn default-reading-list-mutations [user-id]
-  (->> core/default-reading-lists
-       (map #(let [docref (firestore/doc readling-lists-collection)]
-               [:set
-                docref
-                (assoc %
-                       ;;TODO this should probably move to a models function in the domain
-                       :id (.-id docref)
-                       :user-id user-id
-                       :last-read-date (firestore/Timestamp.now))]))))
+  (let [date (firestore/Timestamp.now)]
+    (->> domain.reading-lists/default-reading-lists
+         (map #(let [docref (firestore/doc readling-lists-collection)]
+                 [:set
+                  docref
+                  (domain.reading-lists/init-default-reading-list % (.-id docref) user-id date)])))))

@@ -4,7 +4,7 @@
             [bible.web.navigation.routes :as navigation.routes]
             [bible.web.authentication.views :as authentication.views]
             [bible.web.authentication.events :as authentication.events]
-         #_   [bible.web.notebooks.views :as notebooks.views]
+            [bible.web.reading-lists.views :as reading-lists.views]
             [bible.web.components.core :as c]
             [bible.web.content :as cn]))
 
@@ -30,7 +30,7 @@
        [authentication.views/login-page]
 
        (= current-page navigation.routes/dashboard-page)
-       [logged-in-container [:h1 "LOGGED IN"]]
+       [logged-in-container [:div [reading-lists.views/reading-list]]]
 
        #_#_   :page/notebook
        [logged-in-container

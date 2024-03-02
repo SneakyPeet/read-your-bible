@@ -25,3 +25,7 @@
 
 (defn remove-reading-list [db id]
   (update db ::reading-lists dissoc id))
+
+
+(defn reading-lists [db]
+  (vals (::reading-lists db)))
