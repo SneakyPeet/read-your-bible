@@ -6,6 +6,7 @@
             [bible.web.authentication.views :as authentication.views]
             [bible.web.authentication.events :as authentication.events]
             [bible.web.reading-lists.views :as reading-lists.views]
+            [bible.web.registration.views :as registration.views]
             [bible.web.authentication.subs :as authentication.subs]
             [bible.web.content :as cn]))
 
@@ -47,6 +48,9 @@
 
        (= current-page navigation.routes/login-page)
        [authentication.views/login-page]
+
+       (= current-page navigation.routes/register-page)
+       [registration.views/registration-page]
 
        :else
        [:h1 "No bible.web.navigation.views for " (str current-page)])]))

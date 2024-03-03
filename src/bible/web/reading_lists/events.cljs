@@ -5,6 +5,7 @@
             [bible.web.reading-lists.db :as reading-lists.db]
             [bible.web.firebase.firestore :as firestore-fx]
             [bible.domain.reading-lists :as domain.reading-lists]
+            [bible.web.navigation.routes :as navigation.routes]
             ["firebase/firestore" :as firestore]))
 
 
@@ -27,10 +28,9 @@
     (if (reading-lists.state/lists-have-not-been-initialized-on-signup? db changes)
       ;; We create the initial DB entries.
       ;; This will force the subscribe query to update and call this function again providing the new lists
+
       {:db (reading-lists.state/set-loaded-on-login db)
-       ::firestore-fx/write-batch
-       {:mutations (reading-lists.db/default-reading-list-mutations
-                     (authentication.state/user-id db))}}
+       :goto navigation.routes/register-page}
       ;; Simply set the lists on the state
       {:db
        (reduce
@@ -44,6 +44,19 @@
              (reading-lists.state/remove-reading-list db id)))
          (reading-lists.state/set-loaded-on-login db)
          changes)})))
+
+
+(rf/reg-event-fx
+  ::create-initial-reading-lists
+  (fn [{:keys [db]} [_ read-index]]
+    {:goto navigation.routes/dashboard-page
+     ::firestore-fx/write-batch
+     {:mutations (reading-lists.db/default-reading-list-mutations
+                   (authentication.state/user-id db))}}))
+
+
+(defn create-initial-reading-lists [read-index]
+  (rf/dispatch [::create-initial-reading-lists]))
 
 
 (rf/reg-event-fx
