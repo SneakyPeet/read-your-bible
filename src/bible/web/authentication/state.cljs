@@ -25,3 +25,7 @@
 
 (defn user-id [db]
   (get-in db [::user :user-id]))
+
+
+(defn logged-in? [db]
+  (some? (user-id db)))

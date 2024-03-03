@@ -40,7 +40,7 @@
   ::reset
   (fn [_ _]
     {:db  (initial-state)
-     :goto navigation.routes/login-page}))
+     :goto navigation.routes/landing-page}))
 
 
 (rf/reg-event-fx

@@ -9,9 +9,12 @@
     [:div
      (->> reading-lists
           (map (fn [{:keys [id title chapter]}]
-                 [:div {:key id}
-                  [:small title]
-                  [:br]
-                  [:label chapter]
-                  [:button {:on-click #(reading-lists.events/increment-reading-list-index id)}
+                 [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.mb-2
+                  {:key id
+                   :style {:border-bottom "#dbdbdb 1px solid"}}
+                  [:div
+                   [:label.heading.mb-0 title]
+                   [:a.is-size-5.has-text-grey-dark chapter]]
+                  [:button.button.is-small.is-align-items-flex-end
+                   {:on-click #(reading-lists.events/increment-reading-list-index id)}
                    ">"]])))]))

@@ -7,3 +7,12 @@
   ::user-id
   (fn [db]
     (authentication.state/user-id db)))
+
+
+(rf/reg-sub
+  ::logged-in?
+  (fn [db]
+    (authentication.state/logged-in? db)))
+
+
+(def logged-in-sub [::logged-in?])

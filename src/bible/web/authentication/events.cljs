@@ -38,7 +38,6 @@
 (rf/reg-fx
   ::firebase-on-auth-state-changed
   (fn [[signed-in-evt signed-out-evt]]
-    (prn ::firebase-on-auth-state-changed)
     (firebase-auth/onAuthStateChanged
       auth
       (fn [firebase-user]

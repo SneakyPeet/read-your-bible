@@ -9,6 +9,6 @@
 
 
 (defn chapter-read-event-mutation [reading-list date]
-  (let [docref (firestore/doc read-events-collection)
-        data (domain.read-events/list-read-event reading-list date)]
+  (let [data (domain.read-events/list-read-event reading-list date)
+        docref (firestore/doc firebase/firestore read-events-table-name (:id data))]
     [:set docref data]))

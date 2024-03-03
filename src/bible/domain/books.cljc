@@ -88,3 +88,32 @@
 
 (defn book-title [book-id]
   (get-in books-by-id [book-id :title]))
+
+
+(defn book-chapter-numbers [book-id]
+  (let [chapters (get-in books-by-id [book-id :chapters])]
+    (->> (range 1 (inc chapters))
+         (map (fn [chapter-number] [book-id chapter-number]))
+         vec)))
+
+
+(defn list-chapters [book-ids]
+  (->> book-ids
+       (map book-chapter-numbers)
+       (reduce into)))
+
+
+(defn find-book-chapter-at-index
+  "given a list of books, finds the book and chapter for the given index"
+  [book-ids read-index]
+  (let [chapter-lookup    (list-chapters book-ids)
+        total-books       (count chapter-lookup)
+        lookup-index      (mod read-index total-books)
+        [book-id chapter] (nth chapter-lookup lookup-index)]
+    {:book-id book-id
+     :chapter chapter}))
+
+
+(comment
+  (find-book-chapter-at-index [40 41 42 42] 94)
+  ,)

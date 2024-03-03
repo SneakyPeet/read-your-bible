@@ -64,48 +64,19 @@
     :read-index 0}])
 
 
-(defn init-default-reading-list [default-reading-list id user-id create-date]
+(defn init-default-reading-list [default-reading-list user-id create-date]
   (assoc default-reading-list
-         :id id
+         :id (str user-id "-" (:position default-reading-list))
          :user-id user-id
          :last-read-date create-date
          :create-date create-date))
-
-
-(defn- book-chapter-numbers [book-id]
-  (let [chapters (get-in domain.books/books-by-id [book-id :chapters])]
-    (->> (range 1 (inc chapters))
-         (map (fn [chapter-number] [book-id chapter-number]))
-         vec)))
-
-
-(defn- list-chapters [book-ids]
-  (->> book-ids
-       (map book-chapter-numbers)
-       (reduce into)))
-
-
-(defn find-book-chapter-at-index
-  "given a list of books, finds the book and chapter for the given index"
-  [book-ids read-index]
-  (let [chapter-lookup (list-chapters book-ids)
-        total-books   (count chapter-lookup)
-        lookup-index (mod read-index total-books)
-        [book-id chapter] (nth chapter-lookup lookup-index)]
-    {:book-id book-id
-     :chapter chapter}))
-
-
-(comment
-  (find-book-chapter-at-index [40 41 42 42] 94)
-  ,)
 
 
 (defn- step-reading-list
   [f reading-list date]
   (let [{:keys [books read-index]} reading-list
         next-index                 (f read-index)
-        {:keys [book-id chapter]}  (find-book-chapter-at-index books next-index)]
+        {:keys [book-id chapter]}  (domain.books/find-book-chapter-at-index books next-index)]
     (assoc reading-list
            :current-book book-id
            :current-chapter chapter

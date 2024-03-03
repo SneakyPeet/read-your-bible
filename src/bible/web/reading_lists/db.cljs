@@ -18,10 +18,9 @@
 (defn default-reading-list-mutations [user-id]
   (let [date (firestore/Timestamp.now)]
     (->> domain.reading-lists/default-reading-lists
-         (map #(let [docref (firestore/doc reading-lists-collection)]
-                 [:set
-                  docref
-                  (domain.reading-lists/init-default-reading-list % (.-id docref) user-id date)])))))
+         (map #(let [data (domain.reading-lists/init-default-reading-list % user-id date)
+                     docref (firestore/doc firebase/firestore reading-lists-table-name (:id data))]
+                 [:set docref data])))))
 
 
 (defn reading-list-doc-ref [read-list-id]

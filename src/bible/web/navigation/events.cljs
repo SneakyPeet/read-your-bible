@@ -13,3 +13,7 @@
   :goto
   (fn [page]
     (rf/dispatch [::goto page])))
+
+
+(defn goto-route [route]
+  (rf/dispatch [::goto route]))
