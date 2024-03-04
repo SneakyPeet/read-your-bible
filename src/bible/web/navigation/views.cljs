@@ -24,7 +24,7 @@
       [:div.navbar-brand {:style {:justify-content "end"}}
        [:div.navbar-item
         [:div.buttons
-         [:a.button.is-primary
+         [:a.button.is-primary.is-small
           {:on-click auth-fn}
           auth-button-title]]]]]
      [:section.section.pt-0

@@ -1,14 +1,11 @@
 (ns bible.web.authentication.views
-  (:require [bible.web.authentication.events :as authentication.events]))
+  (:require [bible.web.authentication.events :as authentication.events]
+            [bible.web.content :as cn]))
 
 
 (defn login-page []
-  [:div
-   [:h1 "Login"]
+  [:div.is-flex.is-flex-direction-column.is-align-items-center
+   [:p.mb-5 (cn/login-explainer-text)]
    (->> authentication.events/providers
         (map (fn [{:keys [title provider]}]
-               [:button {:key title :on-click #(authentication.events/start-login provider)} title])))])
-
-
-(defn logout-button []
-  [:button {:on-click #(authentication.events/logout)} "Logout"])
+               [:button.button.is-large {:key title :on-click #(authentication.events/start-login provider)} title])))])

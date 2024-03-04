@@ -14,6 +14,8 @@
     :registration/explainer-text "TODO Explain"
     :registration/button-text "Start"
 
+    :login/explainer-text "TODO"
+
     :tongue/missing-key "Missing key {1}"}})
 
 
@@ -29,3 +31,5 @@
 (defn registration-heading [] (value :registration/heading))
 (defn registration-explainer-text [] (value :registration/explainer-text))
 (defn registration-button-text [] (value :registration/button-text))
+
+(defn login-explainer-text [] (value :login/explainer-text))

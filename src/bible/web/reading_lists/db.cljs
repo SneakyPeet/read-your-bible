@@ -15,10 +15,10 @@
     (firestore/where "user-id" "==" user-id)))
 
 
-(defn default-reading-list-mutations [user-id]
+(defn default-reading-list-mutations [user-id read-index]
   (let [date (firestore/Timestamp.now)]
     (->> domain.reading-lists/default-reading-lists
-         (map #(let [data (domain.reading-lists/init-default-reading-list % user-id date)
+         (map #(let [data (domain.reading-lists/init-default-reading-list % user-id date read-index)
                      docref (firestore/doc firebase/firestore reading-lists-table-name (:id data))]
                  [:set docref data])))))
 

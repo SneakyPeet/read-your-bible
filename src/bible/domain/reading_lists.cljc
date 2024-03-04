@@ -64,14 +64,6 @@
     :read-index 0}])
 
 
-(defn init-default-reading-list [default-reading-list user-id create-date]
-  (assoc default-reading-list
-         :id (str user-id "-" (:position default-reading-list))
-         :user-id user-id
-         :last-read-date create-date
-         :create-date create-date))
-
-
 (defn- step-reading-list
   [f reading-list date]
   (let [{:keys [books read-index]} reading-list
@@ -101,3 +93,15 @@
   (decrement-reading-list (first default-reading-lists) nil)
 
   ,)
+
+
+(defn init-default-reading-list [default-reading-list user-id create-date read-index]
+  (let [{:keys [books]} default-reading-list
+        {:keys [book-id chapter]} (domain.books/find-book-chapter-at-index books read-index)]
+    (assoc default-reading-list
+           :id (str user-id "-" (:position default-reading-list))
+           :user-id user-id
+           :current-book book-id
+           :current-chapter chapter
+           :last-read-date create-date
+           :create-date create-date)))

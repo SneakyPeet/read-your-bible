@@ -52,11 +52,11 @@
     {:goto navigation.routes/dashboard-page
      ::firestore-fx/write-batch
      {:mutations (reading-lists.db/default-reading-list-mutations
-                   (authentication.state/user-id db))}}))
+                   (authentication.state/user-id db) read-index)}}))
 
 
 (defn create-initial-reading-lists [read-index]
-  (rf/dispatch [::create-initial-reading-lists]))
+  (rf/dispatch [::create-initial-reading-lists read-index]))
 
 
 (rf/reg-event-fx
