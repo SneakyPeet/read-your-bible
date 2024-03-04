@@ -1,5 +1,6 @@
 (ns bible.domain.reading-lists
-  (:require [bible.domain.books :as domain.books]))
+  (:require [bible.domain.books :as domain.books]
+            [bible.domain.read-events :as domain.read-events]))
 
 (def default-reading-lists
   [{:title "1. Gospel"
@@ -96,12 +97,17 @@
 
 
 (defn init-default-reading-list [default-reading-list user-id create-date read-index]
-  (let [{:keys [books]} default-reading-list
-        {:keys [book-id chapter]} (domain.books/find-book-chapter-at-index books read-index)]
-    (assoc default-reading-list
-           :id (str user-id "-" (:position default-reading-list))
-           :user-id user-id
-           :current-book book-id
-           :current-chapter chapter
-           :last-read-date create-date
-           :create-date create-date)))
+  (let [reading-list (assoc default-reading-list
+                            :id (str user-id "-" (:position default-reading-list))
+                            :user-id user-id
+                            :last-read-date create-date
+                            :create-date create-date)
+        reduce-initial-data {:reading-list reading-list
+                             :events []}]
+    (reduce
+      (fn [state _]
+        (-> state
+            (update :reading-list increment-reading-list create-date)
+            (update :events conj (domain.read-events/read-on-registration-event (:reading-list state) create-date))))
+      reduce-initial-data
+      (range read-index))))

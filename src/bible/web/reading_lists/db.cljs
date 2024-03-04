@@ -16,11 +16,18 @@
 
 
 (defn default-reading-list-mutations [user-id read-index]
-  (let [date (firestore/Timestamp.now)]
-    (->> domain.reading-lists/default-reading-lists
-         (map #(let [data (domain.reading-lists/init-default-reading-list % user-id date read-index)
-                     docref (firestore/doc firebase/firestore reading-lists-table-name (:id data))]
-                 [:set docref data])))))
+  (let [date (firestore/Timestamp.now)
+        mutations (->> domain.reading-lists/default-reading-lists
+                       (map (fn [default-reading-list]
+                              (let [{:keys [reading-list events]} (domain.reading-lists/init-default-reading-list default-reading-list user-id date read-index)
+                                    docref                        (firestore/doc firebase/firestore reading-lists-table-name (:id reading-list))]
+                                {:event-mutations    (map read-events.db/chapter-read-event-mutation events)
+                                 :read-list-mutation [:set docref reading-list]}))))
+        read-list-mutations (map :read-list-mutation mutations)
+        events-mutations (->> (map :event-mutations mutations)
+                              (reduce into))]
+    {:read-list-mutations read-list-mutations
+     :event-mutations     events-mutations}))
 
 
 (defn reading-list-doc-ref [read-list-id]
@@ -32,4 +39,4 @@
         docref (reading-list-doc-ref (:id reading-list))
         reading-list' (domain.reading-lists/increment-reading-list reading-list date)]
     [[:set docref reading-list']
-     (read-events.db/chapter-read-event-mutation reading-list' date)]))
+     (read-events.db/chapter-read-event-mutation-from-reading-list reading-list' date)]))

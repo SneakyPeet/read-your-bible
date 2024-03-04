@@ -49,10 +49,13 @@
 (rf/reg-event-fx
   ::create-initial-reading-lists
   (fn [{:keys [db]} [_ read-index]]
-    {:goto navigation.routes/dashboard-page
-     ::firestore-fx/write-batch
-     {:mutations (reading-lists.db/default-reading-list-mutations
-                   (authentication.state/user-id db) read-index)}}))
+    (let [{:keys [read-list-mutations event-mutations]} (reading-lists.db/default-reading-list-mutations
+                                                          (authentication.state/user-id db) read-index)]
+      {:goto navigation.routes/dashboard-page
+       ::firestore-fx/write-batch
+       {:mutations read-list-mutations}
+       ::firestore-fx/write-batches
+       {:mutations event-mutations}})))
 
 
 (defn create-initial-reading-lists [read-index]

@@ -56,6 +56,27 @@
                       (rf/dispatch (conj on-error err)))))))))
 
 
+(def firebase-batch-limit 500)
+
+(rf/reg-fx
+  ::write-batches
+  (fn [{:keys [mutations]}]
+    (doseq [batch-mutations (partition-all firebase-batch-limit mutations)]
+      (let [batch (firestore/writeBatch firebase/firestore)]
+        (doseq [[t doc-ref data] batch-mutations]
+          (cond
+            (= :set t)
+            (.set batch doc-ref (clj->js data))
+            (= :update t)
+            (.update batch doc-ref (clj->js data))
+            (= :delete t)
+            (.delete batch)))
+        (-> (.commit batch)
+            (.then (fn []))
+            (.catch (fn [err]
+                      (js/console.error err))))))))
+
+
 (defonce ^:private *on-snapshot-subs (atom {}))
 
 

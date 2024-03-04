@@ -1,7 +1,8 @@
 (ns bible.domain.read-events)
 
 
-(def chapter-read-evt-type-list "list")
+(def chapter-read-evt-type-list "list-read")
+(def chapter-read-evt-registration "read-on-registration")
 (def chapter-read-evt-type-manual-entry "manual-entry")
 
 (defn read-event-id [user-id date book-id chapter-id]
@@ -30,3 +31,7 @@
    :create-date "TODO"
    :type        chapter-read-evt-type-manual-entry
    :type-data   {}})
+
+
+(defn read-on-registration-event [reading-list date]
+  (assoc (list-read-event reading-list date) :type chapter-read-evt-registration))
