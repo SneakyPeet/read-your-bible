@@ -29,6 +29,7 @@
 (def projection-lists-times-read "lists-read")
 (def projection-streaks "streaks")
 (def projection-read-history "read-history")
+(def projection-timeline "timeline")
 
 
 ;; PROJECTION IMPLS
@@ -197,13 +198,42 @@
                (take 365)))
         state))))
 
+
+(def timeline-projection
+  (reify ChapterReadEventProjection
+
+    (projection-type [_] projection-timeline)
+
+    (initial-state [_]
+      [])
+
+    (next-state [_ state event]
+      (if (domain.read-events/list-read-event? event)
+        (let [{:keys [book-id
+                      read-date
+                      chapter]} event
+              lookup            (->> state
+                                     (map (juxt :book-id identity))
+                                     (into {}))
+              entry             (get lookup book-id {:book-id    book-id
+                                                     :start-date read-date
+                                                     :end-date   read-date})
+              entry'            (if (= 1 chapter)
+                                  (assoc entry
+                                         :start-date read-date
+                                         :end-date read-date)
+                                  (assoc entry :end-date read-date))]
+          (vals (assoc lookup book-id entry')))
+        state))))
+
 ;; CORE
 
 (def projections
   [times-read-projection
    lists-read-projection
    streaks-projection
-   read-history-projection])
+   read-history-projection
+   timeline-projection])
 
 
 (defn initialize-projection [user-id projection-impl]
