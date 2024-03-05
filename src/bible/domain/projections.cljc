@@ -23,7 +23,8 @@
       double))
 
 
-(def projection-type-times-read "times-read")
+(def projection-type-times-read "books-read")
+(def projection-lists-times-read "lists-read")
 
 
 ;; PROJECTION IMPLS
@@ -84,10 +85,30 @@
                                             :total (times-read books)})))))))))
 
 
+(def lists-read-projection
+  (reify ChapterReadEventProjection
+
+    (projection-type [_] projection-lists-times-read)
+
+    (initial-state [_]
+      [])
+    (next-state [_ state event]
+      (let [lookup (->> state
+                        (map (juxt :list-id identity))
+                        (into {}))
+            {:keys [list-id read-index]} (:type-data event)]
+        (if-not (and list-id read-index)
+          state
+          (let [read-list (-> (get lookup list-id {:list-id list-id :chapters-read 0})
+                              (update :chapters-read inc))]
+            (vals
+              (assoc lookup list-id read-list))))))))
+
 ;; CORE
 
 (def projections
-  [times-read-projection])
+  [times-read-projection
+   lists-read-projection])
 
 
 (defn initialize-projection [user-id projection-impl]
