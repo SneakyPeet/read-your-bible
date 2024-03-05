@@ -18,14 +18,14 @@
    [:form
     {:on-submit (fn [evt]
                   (.preventDefault evt)
-                  (let [read-index (js/parseInt (.-value (js/document.getElementById "day-select")))]
+                  (let [read-index (dec (js/parseInt (.-value (js/document.getElementById "day-select"))))]
                     (reading-lists.events/create-initial-reading-lists read-index)))}
 
     [:div.field
      [:div.control
       [:div.select
        [:select#day-select
-        (->> (range 0 (inc max-allowed-days))
+        (->> (range 1 (inc max-allowed-days))
              (map (fn [i]
                     [:option {:key i :value i} i])))]]]]
 

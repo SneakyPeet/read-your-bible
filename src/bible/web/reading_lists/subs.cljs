@@ -17,3 +17,11 @@
 
 
 (def reading-lists-view ::reading-lists-view)
+
+
+(rf/reg-sub
+  ::allow-increment?
+  (fn [db]
+    (reading-lists.state/allow-increment? db)))
+
+(def allow-increment-sub ::allow-increment?)

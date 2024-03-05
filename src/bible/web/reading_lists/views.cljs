@@ -5,7 +5,8 @@
 
 
 (defn reading-list []
-  (let [reading-lists @(rf/subscribe [reading-lists.subs/reading-lists-view])]
+  (let [reading-lists @(rf/subscribe [reading-lists.subs/reading-lists-view])
+        allow-increment @(rf/subscribe [reading-lists.subs/allow-increment-sub])]
     (if (empty? reading-lists)
       [:h1 "LOADING"]
       [:div
@@ -18,5 +19,6 @@
                      [:label.heading.mb-0 title]
                      [:a.is-size-5.has-text-grey-dark chapter]]
                     [:button.button.is-small.is-align-items-flex-end
-                     {:on-click #(reading-lists.events/increment-reading-list-index id)}
+                     {:disabled (not allow-increment)
+                      :on-click #(reading-lists.events/increment-reading-list-index id)}
                      ">"]])))])))

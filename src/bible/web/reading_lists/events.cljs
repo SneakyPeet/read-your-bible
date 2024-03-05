@@ -3,8 +3,8 @@
             [bible.web.authentication.state :as authentication.state]
             [bible.web.reading-lists.state :as reading-lists.state]
             [bible.web.reading-lists.db :as reading-lists.db]
+            [bible.web.projections.state :as projections.state]
             [bible.web.firebase.firestore :as firestore-fx]
-            [bible.domain.reading-lists :as domain.reading-lists]
             [bible.web.navigation.routes :as navigation.routes]
             ["firebase/firestore" :as firestore]))
 
@@ -32,28 +32,34 @@
       {:db (reading-lists.state/set-loaded-on-login db)
        :goto navigation.routes/register-page}
       ;; Simply set the lists on the state
-      {:db
-       (reduce
-         (fn [db {:keys [type id data]}]
-           (cond
-             (= :add type)
-             (reading-lists.state/add-reading-list db id data)
-             (= :modify type)
-             (reading-lists.state/modify-reading-list db id data)
-             (= :remove type)
-             (reading-lists.state/remove-reading-list db id)))
-         (reading-lists.state/set-loaded-on-login db)
-         changes)})))
+      (let [db' (->> db
+                     reading-lists.state/set-loaded-on-login
+                     reading-lists.state/allow-increment)]
+        {:db
+         (reduce
+           (fn [db {:keys [type id data]}]
+             (cond
+               (= :add type)
+               (reading-lists.state/add-reading-list db id data)
+               (= :modify type)
+               (reading-lists.state/modify-reading-list db id data)
+               (= :remove type)
+               (reading-lists.state/remove-reading-list db id)))
+           db'
+           changes)}))))
 
 
 (rf/reg-event-fx
   ::create-initial-reading-lists
   (fn [{:keys [db]} [_ read-index]]
-    (let [{:keys [read-list-mutations event-mutations]} (reading-lists.db/default-reading-list-mutations
-                                                          (authentication.state/user-id db) read-index)]
+    (let [{:keys [read-list-mutations
+                  event-mutations
+                  projection-mutations]} (reading-lists.db/default-reading-list-mutations
+                                           (authentication.state/user-id db) read-index)]
       {:goto navigation.routes/dashboard-page
+       :db (reading-lists.state/prevent-increment db)
        ::firestore-fx/write-batch
-       {:mutations read-list-mutations}
+       {:mutations (concat read-list-mutations projection-mutations)}
        ::firestore-fx/write-batches
        {:mutations event-mutations}})))
 
@@ -65,9 +71,13 @@
 (rf/reg-event-fx
   ::increment-read-list-index
   (fn [{:keys [db]} [_ read-list-id]]
-    (let [read-list (reading-lists.state/read-list db read-list-id)]
-      {::firestore-fx/write-batch
-       {:mutations (reading-lists.db/increment-reading-list-mutations read-list)}})))
+    (let [read-list (reading-lists.state/read-list db read-list-id)
+          projections (projections.state/projections db)
+          user-id (authentication.state/user-id db)]
+      {:db (reading-lists.state/prevent-increment db)
+       ::firestore-fx/write-batch
+       {:mutations (reading-lists.db/increment-reading-list-mutations
+                     user-id read-list projections)}})))
 
 
 (defn increment-reading-list-index [read-list-id]

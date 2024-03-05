@@ -13,5 +13,11 @@ service cloud.firestore {
       allow read, update, delete: if false;
       allow create: if request.auth != null && request.auth.uid == request.resource.data["user-id"];
     }
+
+    match /projections/{projection_id} {
+      allow read: if request.auth != null && request.auth.uid == resource.data["user-id"];
+      allow create, update: if request.auth != null && request.auth.uid == request.resource.data["user-id"];
+      allow delete: if false;
+    }
   }
 }

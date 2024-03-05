@@ -2,7 +2,8 @@
 
 (defn initial-state []
   {::loaded-on-login? false
-   ::reading-lists {}})
+   ::reading-lists {}
+   ::allow-increment? true})
 
 
 (defn lists-have-not-been-initialized-on-signup? [db readling-list-db-changes]
@@ -33,3 +34,15 @@
 
 (defn read-list [db id]
   (get-in db [::reading-lists id]))
+
+
+(defn allow-increment [db]
+  (assoc db ::allow-increment? true))
+
+
+(defn prevent-increment [db]
+  (assoc db ::allow-increment? false))
+
+
+(defn allow-increment? [db]
+  (::allow-increment? db))

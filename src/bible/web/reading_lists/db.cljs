@@ -2,7 +2,8 @@
   (:require [bible.web.firebase.config :as firebase]
             ["firebase/firestore" :as firestore]
             [bible.domain.reading-lists :as domain.reading-lists]
-            [bible.web.read-events.db :as read-events.db]))
+            [bible.web.read-events.db :as read-events.db]
+            [bible.web.projections.db :as projections.db]))
 
 
 (def reading-lists-table-name "reading-lists")
@@ -25,18 +26,25 @@
                                  :read-list-mutation [:set docref reading-list]}))))
         read-list-mutations (map :read-list-mutation mutations)
         events-mutations (->> (map :event-mutations mutations)
-                              (reduce into))]
-    {:read-list-mutations read-list-mutations
-     :event-mutations     events-mutations}))
+                              (reduce into))
+        projection-mutations (projections.db/next-projection-mutations
+                               user-id [] (map last events-mutations))]
+    {:read-list-mutations  read-list-mutations
+     :event-mutations      events-mutations
+     :projection-mutations projection-mutations}))
 
 
 (defn reading-list-doc-ref [read-list-id]
   (firestore/doc firebase/firestore reading-lists-table-name read-list-id))
 
 
-(defn increment-reading-list-mutations [reading-list]
+(defn increment-reading-list-mutations [user-id reading-list projections]
   (let [date (firestore/Timestamp.now)
         docref (reading-list-doc-ref (:id reading-list))
-        reading-list' (domain.reading-lists/increment-reading-list reading-list date)]
-    [[:set docref reading-list']
-     (read-events.db/chapter-read-event-mutation-from-reading-list reading-list' date)]))
+        reading-list' (domain.reading-lists/increment-reading-list reading-list date)
+        event-mutation (read-events.db/chapter-read-event-mutation-from-reading-list reading-list date)
+        projection-mutations (projections.db/next-projection-mutations user-id projections [(last event-mutation)])]
+    (concat
+      [[:set docref reading-list']
+       event-mutation]
+      projection-mutations)))

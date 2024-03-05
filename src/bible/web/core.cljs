@@ -17,6 +17,9 @@
             [bible.web.reading-lists.state :as reading-lists.state]
             [bible.web.reading-lists.events :as reading-lists.events]
 
+            [bible.web.projections.state :as projections.state]
+            [bible.web.projections.events :as projections.events]
+
             [bible.web.firebase.firestore :as firestore-fx]))
 
 
@@ -26,7 +29,8 @@
   (merge
     (navigation.state/initial-state)
     (authentication.state/initial-state [::logged-in] [::logged-out])
-    (reading-lists.state/initial-state)))
+    (reading-lists.state/initial-state)
+    (projections.state/initial-state)))
 
 
 (rf/reg-event-fx
@@ -47,7 +51,8 @@
   ::logged-in
   (fn [_ _]
     {:goto  navigation.routes/dashboard-page
-     :dispatch reading-lists.events/initialize-lists-event}))
+     :dispatch-n [reading-lists.events/initialize-lists-event
+                  projections.events/initialize-projections-event]}))
 
 
 (rf/reg-event-fx
