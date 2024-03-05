@@ -5,7 +5,7 @@
 * Loading indicator (loading page and lists)
 
 * PROJECTIONS
-* streak
+* streaks
 * Timeline
 * new testament read total
 * donut progress chart for reading lists

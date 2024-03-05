@@ -8,31 +8,86 @@
   (next-state [this state event]))
 
 
+(defn round-2 [n]
+  (-> n
+      (* 100)
+      math/round
+      (/ 100)
+      double))
+
+(defn round-3 [n]
+  (-> n
+      (* 1000)
+      math/round
+      (/ 1000)
+      double))
+
+
+(def projection-type-times-read "times-read")
+
 
 ;; PROJECTION IMPLS
-(def times-books-read-projection
+
+(defn times-read [books]
+  (let [chapters (->> books
+                      (map :chapters)
+                      (reduce into)
+                      (map :total))
+        total-chapters (count chapters)
+        least-read-total (first (sort chapters))
+        read-total (->> chapters
+                        (filter #(> % least-read-total))
+                        count)]
+    (round-3 (+ least-read-total (/ read-total total-chapters)))))
+
+(def times-read-projection
   (reify ChapterReadEventProjection
-    (projection-type [_] "times-books-read")
+
+    (projection-type [_] projection-type-times-read)
+
     (initial-state [this]
-      (->> domain.books/books
-           (map (fn [{:keys [book-id]}]
-                  {:book-id book-id
-                   :total   0}))))
+      {:books (->> domain.books/books
+                   (map (fn [{:keys [book-id chapters testament]}]
+                          {:book-id book-id
+                           :testament testament
+                           :total   0
+                           :chapters (->> (range 1 (inc chapters))
+                                          (map (fn [c]
+                                                 {:chapter c
+                                                  :total   0})))})))
+       :testaments [{:testament "new" :total     0}
+                    {:testament "old" :total     0}]
+       :bible 0})
+
     (next-state [this state event]
-      (let [state             (vec state)
-            {:keys [book-id]} event
+      (let [state             (-> state
+                                  (update :books vec)
+                                  (update :testaments vec))
+            {:keys [book-id chapter]} event
             chapters          (get-in domain.books/books-by-id [book-id :chapters])
             last-chapter?      (= chapters (:chapter event))
-            increase          (double (/ 1 chapters))]
-        (update-in state [(dec book-id) :total] #(cond-> (+ % increase)
-                                                   last-chapter?
-                                                   math/round))))))
+            increase          (double (/ 1 chapters))
+            state-next (update-in state [:books (dec book-id)]
+                                  (fn [book]
+                                    (-> book
+                                        (update :total #(cond-> (+ % increase)
+                                                          last-chapter?
+                                                          math/round))
+                                        (update :chapters vec)
+                                        (update-in [:chapters (dec chapter) :total] inc))))]
+        (-> state-next
+            (assoc :bible (times-read (:books state-next))
+                   :testaments (->> (:books state-next)
+                                    (group-by :testament)
+                                    (map (fn [[testament books]]
+                                           {:testament testament
+                                            :total (times-read books)})))))))))
 
 
 ;; CORE
 
 (def projections
-  [times-books-read-projection])
+  [times-read-projection])
 
 
 (defn initialize-projection [user-id projection-impl]
@@ -46,6 +101,12 @@
 (defn projections-by-type [projections]
   (->> projections
        (map (juxt :projection-type identity))
+       (into {})))
+
+
+(defn projection-state-by-type [projections]
+  (->> projections
+       (map (juxt :projection-type :state))
        (into {})))
 
 

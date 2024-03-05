@@ -18,8 +18,8 @@
   (update db ::projections dissoc id))
 
 
-(defn projections-by-type [db]
-  (domain.projections/projections-by-type (vals (::projections db))))
+(defn projection-state-by-type [db]
+  (domain.projections/projection-state-by-type (vals (::projections db))))
 
 
 (defn projections [db]

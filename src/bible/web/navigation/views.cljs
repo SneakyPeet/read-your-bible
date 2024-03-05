@@ -8,6 +8,7 @@
             [bible.web.reading-lists.views :as reading-lists.views]
             [bible.web.registration.views :as registration.views]
             [bible.web.authentication.subs :as authentication.subs]
+            [bible.web.projections.views :as projection.views]
             [bible.web.content :as cn]))
 
 
@@ -38,7 +39,9 @@
     [wrapper
      (cond
        (= current-page navigation.routes/dashboard-page)
-       [:div [reading-lists.views/reading-list]]
+       [:div
+        [reading-lists.views/reading-list]
+        [projection.views/read-counts]]
 
        (= current-page navigation.routes/landing-page)
        [:h1 "landing"]
