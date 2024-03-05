@@ -111,35 +111,35 @@
 
 (def seconds-in-a-day 86400)
 
-(def initial-streak-data {:last-read-seconds 0
-                          :total             0
-                          :previous-max      0})
+(def initial-streak-data {:last-read-date (firestore/Timestamp.fromMillis 0)
+                          :total          0
+                          :previous-max   0})
 
 (defn- update-streak [streak]
-  (let [{:keys [last-read-seconds previous-max total]} streak
+  (let [{:keys [last-read-date previous-max total]} streak
         now-ts (firestore/Timestamp.now)
-        now (.-seconds now-ts)
         midnight-date (.toDate now-ts)
         _             (.setHours midnight-date 0 0 0 0)
         midnight-today (-> midnight-date
                            (firestore/Timestamp.fromDate)
                            (.-seconds))
         midnight-yesterday (- midnight-today seconds-in-a-day)
-        last-read-today? (> last-read-seconds midnight-today)
-        last-read-yesterday? (> last-read-seconds midnight-yesterday)]
+        last-read-today? (> (.-seconds last-read-date) midnight-today)
+        last-read-yesterday? (> (.-seconds last-read-date) midnight-yesterday)]
     (cond
       last-read-today?
-      (assoc streak :last-read-seconds now)
+      (assoc streak :last-read-date now-ts)
 
       last-read-yesterday?
       (-> streak
-          (assoc :last-read-seconds now)
+          (assoc :last-read-date now-ts)
           (update :total inc))
 
       :else
-      {:last-read-seconds now
-       :total 1
-       :previous-max (max previous-max total)})))
+      (assoc streak
+             :last-read-date now-ts
+             :total          1
+             :previous-max   (max previous-max total)))))
 
 
 (defn- update-readlist-streaks [list-streaks event]
