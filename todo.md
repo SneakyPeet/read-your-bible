@@ -1,4 +1,4 @@
-* Link to bible app  https://www.bible.com/bible/59/JHN.3
+* on regitration show loading page
 
 * rename lists to their types "torah etc"
 * potentially fix auth domain
