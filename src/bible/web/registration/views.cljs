@@ -37,7 +37,6 @@
      [:div.control
       [:div.select
        [:select#translation-select
-        (prn domain.translations/translations)
         (->> domain.translations/translations
              (map (fn [{:keys [id title]}]
                     [:option {:key id :value id} (str title)])))]]]]

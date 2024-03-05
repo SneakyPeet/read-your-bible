@@ -19,6 +19,10 @@
   (::preferences db))
 
 
+(defn translation [db]
+  (:translation (::preferences db)))
+
+
 (defn youversion-url [db book-id chapter]
-  (let [translation (:translation (::preferences db))]
+  (let [translation (translation db)]
     (domain.youversion/get-youversion-url translation book-id chapter)))

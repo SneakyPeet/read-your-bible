@@ -9,6 +9,7 @@
             [bible.web.registration.views :as registration.views]
             [bible.web.authentication.subs :as authentication.subs]
             [bible.web.projections.views :as projection.views]
+            [bible.web.preferences.views :as preferences.views]
             [bible.web.content :as cn]))
 
 
@@ -41,6 +42,7 @@
        (= current-page navigation.routes/dashboard-page)
        [:div
         [reading-lists.views/reading-list]
+        [preferences.views/set-translation]
         [projection.views/read-counts]]
 
        (= current-page navigation.routes/landing-page)
