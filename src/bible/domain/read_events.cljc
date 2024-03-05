@@ -22,6 +22,10 @@
                    :read-index read-index}}))
 
 
+(defn list-read-event? [event]
+  (= chapter-read-evt-type-list (:type event)))
+
+
 (defn manual-entry-read-event [user-id book-id chapter-id read-date]
   {:id          (read-event-id user-id read-date book-id chapter-id)
    :user-id     user-id

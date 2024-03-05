@@ -1,6 +1,8 @@
 (ns bible.domain.projections
   (:require [bible.domain.books :as domain.books]
-            [clojure.math :as math]))
+            [bible.domain.read-events :as domain.read-events]
+            [clojure.math :as math]
+            ["firebase/firestore" :as firestore]))
 
 (defprotocol ChapterReadEventProjection
   (projection-type [this])
@@ -25,6 +27,7 @@
 
 (def projection-type-times-read "books-read")
 (def projection-lists-times-read "lists-read")
+(def projection-streaks "streaks")
 
 
 ;; PROJECTION IMPLS
@@ -40,6 +43,7 @@
                         (filter #(> % least-read-total))
                         count)]
     (round-3 (+ least-read-total (/ read-total total-chapters)))))
+
 
 (def times-read-projection
   (reify ChapterReadEventProjection
@@ -104,11 +108,56 @@
             (vals
               (assoc lookup list-id read-list))))))))
 
+(def seconds-in-a-day 86400)
+
+(defn- update-streak [streak]
+  (let [{:keys [last-read-seconds previous-max total]} streak
+        now-ts (firestore/Timestamp.now)
+        now (.-seconds now-ts)
+        midnight-date (.toDate now-ts)
+        _             (.setHours midnight-date 0 0 0 0)
+        midnight-today (-> midnight-date
+                           (firestore/Timestamp.fromDate)
+                           (.-seconds))
+        midnight-yesterday (- midnight-today seconds-in-a-day)
+        last-read-today? (> last-read-seconds midnight-today)
+        last-read-yesterday? (> last-read-seconds midnight-yesterday)]
+    (cond
+      last-read-today?
+      (assoc streak :last-read-seconds now)
+
+      last-read-yesterday?
+      (-> streak
+          (assoc :last-read-seconds now)
+          (update :total inc))
+
+      :else
+      {:last-read-seconds now
+       :total 1
+       :previous-max (max previous-max total)})))
+
+
+(def streaks-projection
+  (reify ChapterReadEventProjection
+
+    (projection-type [_] projection-streaks)
+
+    (initial-state [_]
+      {:daily {:last-read-seconds 0
+               :total 0
+               :previous-max 0}
+       :reading-lists []})
+    (next-state [_ state event]
+      (if (domain.read-events/list-read-event? event)
+        (update state :daily update-streak)
+        state))))
+
 ;; CORE
 
 (def projections
   [times-read-projection
-   lists-read-projection])
+   lists-read-projection
+   streaks-projection])
 
 
 (defn initialize-projection [user-id projection-impl]
