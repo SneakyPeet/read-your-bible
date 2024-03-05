@@ -1,8 +1,10 @@
-(ns bible.domain.youversion)
+(ns bible.domain.youversion
+  (:require [bible.domain.books :as domain.books]
+            [bible.domain.translations :as domain.translations]))
 
-(def translations
-  [[111 "NIV" "New International Version"]
-   [59 "ESV" "English Standard Version 2016"]
-   [116 "NLT" "New Living Translation"]
-   [1 "KJV" "King James Version"]
-   [114 "NKJV" "New King James Version"]])
+
+(defn get-youversion-url [translation book-id chapter]
+  (let [translation-id (domain.translations/get-youversion-id translation)
+        book-alias       (domain.books/get-youversion-alias book-id)]
+    (str "https://www.bible.com/bible/"
+         translation-id "/" book-alias "." chapter)))

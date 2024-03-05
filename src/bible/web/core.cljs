@@ -20,6 +20,9 @@
             [bible.web.projections.state :as projections.state]
             [bible.web.projections.events :as projections.events]
 
+            [bible.web.preferences.state :as preferences.state]
+            [bible.web.preferences.events :as preferences.events]
+
             [bible.web.firebase.firestore :as firestore-fx]))
 
 
@@ -30,7 +33,8 @@
     (navigation.state/initial-state)
     (authentication.state/initial-state [::logged-in] [::logged-out])
     (reading-lists.state/initial-state)
-    (projections.state/initial-state)))
+    (projections.state/initial-state)
+    (preferences.state/initial-state)))
 
 
 (rf/reg-event-fx
@@ -52,7 +56,8 @@
   (fn [_ _]
     {:goto  navigation.routes/dashboard-page
      :dispatch-n [reading-lists.events/initialize-lists-event
-                  projections.events/initialize-projections-event]}))
+                  projections.events/initialize-projections-event
+                  preferences.events/initialize-preferences-event]}))
 
 
 (rf/reg-event-fx

@@ -11,14 +11,20 @@
       [:h1 "LOADING"]
       [:div
        (->> reading-lists
-            (map (fn [{:keys [id title chapter]}]
+            (map (fn [{:keys [id title chapter youversion-url]}]
                    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.mb-2
                     {:key   id
                      :style {:border-bottom "#dbdbdb 1px solid"}}
+
                     [:div
                      [:label.heading.mb-0 title]
                      [:a.is-size-5.has-text-grey-dark chapter]]
-                    [:button.button.is-small.is-align-items-flex-end
-                     {:disabled (not allow-increment)
-                      :on-click #(reading-lists.events/increment-reading-list-index id)}
-                     ">"]])))])))
+                    [:div.buttons.is-align-items-flex-end
+                     [:a.button.is-small
+                      {:href youversion-url
+                       :target "_blank"}
+                      "read"] ;;TODO
+                     [:button.button.is-small
+                      {:disabled (not allow-increment)
+                       :on-click #(reading-lists.events/increment-reading-list-index id)}
+                      ">"]]])))])))

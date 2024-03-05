@@ -117,3 +117,7 @@
 (comment
   (find-book-chapter-at-index [40 41 42 42] 94)
   ,)
+
+
+(defn get-youversion-alias [book-id]
+  (get-in books-by-id [book-id :youversion-alias]))

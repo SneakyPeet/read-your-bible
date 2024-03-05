@@ -1,6 +1,7 @@
 (ns bible.web.reading-lists.subs
   (:require [re-frame.core :as rf]
             [bible.web.reading-lists.state :as reading-lists.state]
+            [bible.web.preferences.state :as preferences.state]
             [bible.domain.books :as domain.books]))
 
 
@@ -13,6 +14,7 @@
                 {:id id
                  :title title
                  :chapter (str (domain.books/book-title current-book) " " current-chapter)
+                 :youversion-url (preferences.state/youversion-url db current-book current-chapter)
                  :data reading-list})))))
 
 
