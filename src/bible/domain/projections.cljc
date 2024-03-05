@@ -28,6 +28,7 @@
 (def projection-type-times-read "books-read")
 (def projection-lists-times-read "lists-read")
 (def projection-streaks "streaks")
+(def projection-read-history "read-history")
 
 
 ;; PROJECTION IMPLS
@@ -157,7 +158,7 @@
     (projection-type [_] projection-streaks)
 
     (initial-state [_]
-      {:daily initial-streak-data 
+      {:daily initial-streak-data
        :reading-lists []})
     (next-state [_ state event]
       (if (domain.read-events/list-read-event? event)
@@ -166,12 +167,43 @@
             (update :reading-lists update-readlist-streaks event))
         state))))
 
+
+(def read-history-projection
+  (reify ChapterReadEventProjection
+
+    (projection-type [_] projection-read-history)
+
+    (initial-state [_]
+      [])
+    (next-state [_ state event]
+      (if (domain.read-events/list-read-event? event)
+        (let [lookup           (->> state
+                                    (map (juxt #(.-seconds (:date %)) identity))
+                                    (into {}))
+              ^firestore/Timestamp read-date (:read-date event)
+              read-js-date     (.toDate read-date)
+              _                (.setHours read-js-date 0 0 0 0)
+              midnight         (firestore/Timestamp.fromDate read-js-date)
+              midnight-seconds (.-seconds midnight)
+              entry            (get lookup midnight-seconds {:date          midnight
+                                                             :chapters-read 0})
+              entry'           (-> entry
+                                   (assoc :date midnight)
+                                   (update :chapters-read inc))]
+          (->> (assoc lookup midnight-seconds entry')
+               vals
+               (sort-by #(.-seconds (:date %)))
+               reverse
+               (take 365)))
+        state))))
+
 ;; CORE
 
 (def projections
   [times-read-projection
    lists-read-projection
-   streaks-projection])
+   streaks-projection
+   read-history-projection])
 
 
 (defn initialize-projection [user-id projection-impl]
