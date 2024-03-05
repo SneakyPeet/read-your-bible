@@ -110,6 +110,10 @@
 
 (def seconds-in-a-day 86400)
 
+(def initial-streak-data {:last-read-seconds 0
+                          :total             0
+                          :previous-max      0})
+
 (defn- update-streak [streak]
   (let [{:keys [last-read-seconds previous-max total]} streak
         now-ts (firestore/Timestamp.now)
@@ -137,19 +141,29 @@
        :previous-max (max previous-max total)})))
 
 
+(defn- update-readlist-streaks [list-streaks event]
+  (let [lookup (->> list-streaks
+                    (map (juxt :list-id identity))
+                    (into {}))
+        list-id (get-in event [:type-data :list-id])
+        streak (get lookup list-id (assoc initial-streak-data :list-id list-id))]
+    (-> (assoc lookup list-id (update-streak streak))
+        vals)))
+
+
 (def streaks-projection
   (reify ChapterReadEventProjection
 
     (projection-type [_] projection-streaks)
 
     (initial-state [_]
-      {:daily {:last-read-seconds 0
-               :total 0
-               :previous-max 0}
+      {:daily initial-streak-data 
        :reading-lists []})
     (next-state [_ state event]
       (if (domain.read-events/list-read-event? event)
-        (update state :daily update-streak)
+        (-> state
+            (update :daily update-streak)
+            (update :reading-lists update-readlist-streaks event))
         state))))
 
 ;; CORE
