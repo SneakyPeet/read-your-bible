@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [bible.web.reading-lists.state :as reading-lists.state]
             [bible.web.preferences.state :as preferences.state]
+            ["firebase/firestore" :as firestore]
             [bible.domain.books :as domain.books]))
 
 
@@ -10,12 +11,15 @@
   (fn [db]
     (->> (reading-lists.state/reading-lists db)
          (sort-by :position)
-         (map (fn [{:keys [id current-book current-chapter title] :as reading-list}]
-                {:id id
-                 :title title
-                 :chapter (str (domain.books/book-title current-book) " " current-chapter)
+         (map (fn [{:keys                                       [id current-book current-chapter title
+                           ^firestore/Timestamp last-read-date] :as reading-list}]
+                (js/console.log last-read-date)
+                {:id             id
+                 :title          title
+                 :chapter        (str (domain.books/book-title current-book) " " current-chapter)
                  :youversion-url (preferences.state/youversion-url db current-book current-chapter)
-                 :data reading-list})))))
+                 :data           reading-list
+                 :read-today?    (reading-lists.state/read-today? db id)})))))
 
 
 (def reading-lists-view ::reading-lists-view)

@@ -11,16 +11,20 @@
       [:h1 "LOADING"]
       [:div
        (->> reading-lists
-            (map (fn [{:keys [id title chapter youversion-url]}]
+            (map (fn [{:keys [id title chapter youversion-url read-today?]}]
                    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.mb-2
                     {:key   id
                      :style {:border-bottom "#dbdbdb 1px solid"}}
 
                     [:div
                      [:label.heading.mb-0 title]
-                     [:a.is-size-5.has-text-grey-dark chapter]]
+                     [:a.is-size-5
+                      {:href youversion-url
+                       :target "_blank"
+                       :class (if read-today? "has-text-primary" "has-text-grey-dark")}
+                      chapter]]
                     [:div.buttons.is-align-items-flex-end
-                     [:a.button.is-small
+                     #_[:a.button.is-small.mr-5
                       {:href youversion-url
                        :target "_blank"}
                       "read"] ;;TODO

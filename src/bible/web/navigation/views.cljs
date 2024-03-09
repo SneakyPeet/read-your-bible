@@ -86,6 +86,7 @@
         [projection.views/all-charts]]]
       [loader])))
 
+
 (defn current-page []
   (let [current-page @(rf/subscribe [::navigation.subs/current-page])]
     [wrapper

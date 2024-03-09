@@ -3,7 +3,8 @@
 (defn initial-state []
   {::loaded-on-login? false
    ::reading-lists {}
-   ::allow-increment? true})
+   ::allow-increment? true
+   ::read-today #{}})
 
 
 (defn lists-have-not-been-initialized-on-signup? [db readling-list-db-changes]
@@ -54,3 +55,11 @@
 
 (defn allow-increment? [db]
   (::allow-increment? db))
+
+
+(defn set-read-today [db list-id]
+  (update db ::read-today conj list-id))
+
+
+(defn read-today? [db list-id]
+  (contains? (::read-today db) list-id))
