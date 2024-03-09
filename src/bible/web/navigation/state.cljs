@@ -3,7 +3,7 @@
 
 
 (defn initial-state []
-  {::current-page navigation.routes/landing-page})
+  {::current-page navigation.routes/loading-page})
 
 
 (defn current-page [state]

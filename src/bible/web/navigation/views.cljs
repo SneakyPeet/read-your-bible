@@ -68,12 +68,18 @@
    [authentication.views/login-page]])
 
 
+(defn loader []
+  [:div.is-flex.is-flex-direction-column.is-align-items-center
+   {:style {:margin "40vh 0"}}
+   [:div.page-loader]])
+
+
 (defn current-page []
   (let [current-page @(rf/subscribe [::navigation.subs/current-page])]
     [wrapper
      (cond
        (= current-page navigation.routes/dashboard-page)
-       [:div.columns.mt-5
+       [:div.columns.mt-2
         [:div.column.is-half
          [reading-lists.views/reading-list]
          [preferences.views/set-translation]]
@@ -81,11 +87,10 @@
          [projection.views/all-charts]]]
 
        (= current-page navigation.routes/landing-page)
-       [landing
-        ]
+       [landing]
 
        (= current-page navigation.routes/loading-page)
-       [:h1 "Loading"]
+       [loader]
 
        (= current-page navigation.routes/login-page)
        [authentication.views/login-page]

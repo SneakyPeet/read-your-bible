@@ -14,7 +14,7 @@ remember -add project-id
 
 npx firebase deploy --only firestore:rules
 
-npx firebase deploy --only hosting
+npx firebase deploy --only hosting --project bible-reading-plan
 
 # Shaddow CLJS
 
