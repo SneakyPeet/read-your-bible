@@ -29,7 +29,8 @@
              :stroke {:lineCap "round"}}
    :series [value]
    :type "radialBar"
-   :height 150})
+   :height 140})
+
 
 (defn read-counts []
   (let [counts @(rf/subscribe [projections.subs/times-read-sub])]
@@ -40,3 +41,32 @@
                         :style {:width "33%"}}
                   [rchart (donut-progress-opts title total)]])))
      ]))
+
+;; Activity
+
+(defn activity []
+  (let [activity @(rf/subscribe [projections.subs/activity-sub])]
+    [:div #_{:style {:overflow-y "scroll"}}
+     [rchart {:type "heatmap"
+              :height 150
+              :series activity
+              :options {:dataLabels {:enabled false}
+                        :legend {:show false}
+                        :plotOptions {:heatmap {:colorScale {:ranges [{:from  0
+                                                                       :to    0
+                                                                       :color "#cacaca"}
+                                                                      {:from 1
+                                                                       :to 50
+                                                                       :color "#00A100"}
+                                                                      ]}}}
+                        :toolbar {:show true}
+                        :width "100%"
+                        :xaxis {:labels {:show false}}
+                        :yaxis {:labels {:show false}}}}]]))
+
+;; Page
+
+(defn all-charts []
+  [:div
+   [read-counts]
+   [activity]])

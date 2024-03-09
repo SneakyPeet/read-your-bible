@@ -45,7 +45,7 @@
          [reading-lists.views/reading-list]
          [preferences.views/set-translation]]
         [:div.column
-         [projection.views/read-counts]]]
+         [projection.views/all-charts]]]
 
        (= current-page navigation.routes/landing-page)
        [:h1 "landing"]
