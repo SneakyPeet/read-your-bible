@@ -101,8 +101,7 @@
                               {:title    (:title list)
                                :position (:position list)
                                :percent  percent})))
-                     (sort-by :position)
-                     )]
+                     (sort-by :position))]
       {:labels (map :title stats)
        :series (map :percent stats)})))
 

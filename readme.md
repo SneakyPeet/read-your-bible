@@ -10,23 +10,29 @@ https://clojurescript.org/guides/promise-interop#using-promises-with-core-async
 
 remember -add project-id
 
+## deploy
+
+npx firebase deploy --only firestore:rules
+
+npx firebase deploy --only hosting
+
 # Shaddow CLJS
 
 ## compile a build once and exit
-$ npx shadow-cljs compile app
+$ npx shadow-cljs compile web
 
 ## compile and watch
-$ npx shadow-cljs watch app
+$ npx shadow-cljs watch web
 
 ## connect to REPL for the build (available while watch is running)
-$ npx shadow-cljs cljs-repl app
+$ npx shadow-cljs cljs-repl web
 
 ## connect to standalone node repl
 $ npx shadow-cljs node-repl
 
 ## Running a release build optimized for production use
-$ npx shadow-cljs release app
+$ npx shadow-cljs release web
 
 ## Release debugging commands.
-$ shadow-cljs check app
-$ shadow-cljs release app --debug
+$ shadow-cljs check web
+$ shadow-cljs release web --debug
