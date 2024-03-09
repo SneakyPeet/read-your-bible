@@ -6,6 +6,7 @@
             [bible.web.authentication.views :as authentication.views]
             [bible.web.authentication.events :as authentication.events]
             [bible.web.reading-lists.views :as reading-lists.views]
+            [bible.web.reading-lists.subs :as reading-lists.subs]
             [bible.web.registration.views :as registration.views]
             [bible.web.authentication.subs :as authentication.subs]
             [bible.web.projections.views :as projection.views]
@@ -74,17 +75,23 @@
    [:div.page-loader]])
 
 
+(defn app []
+  (let [any-reading-lists? @(rf/subscribe [reading-lists.subs/any-sub])]
+    (if any-reading-lists?
+      [:div.columns.mt-2
+       [:div.column.is-half
+        [reading-lists.views/reading-list]
+        [preferences.views/set-translation]]
+       [:div.column
+        [projection.views/all-charts]]]
+      [loader])))
+
 (defn current-page []
   (let [current-page @(rf/subscribe [::navigation.subs/current-page])]
     [wrapper
      (cond
        (= current-page navigation.routes/dashboard-page)
-       [:div.columns.mt-2
-        [:div.column.is-half
-         [reading-lists.views/reading-list]
-         [preferences.views/set-translation]]
-        [:div.column
-         [projection.views/all-charts]]]
+       [app]
 
        (= current-page navigation.routes/landing-page)
        [landing]
@@ -92,7 +99,7 @@
        (= current-page navigation.routes/loading-page)
        [loader]
 
-       (= current-page navigation.routes/login-page)
+       (= current-page navigation.routes/login-page) ;;TODO REMOVE
        [authentication.views/login-page]
 
        (= current-page navigation.routes/register-page)

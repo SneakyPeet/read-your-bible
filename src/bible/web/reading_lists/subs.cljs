@@ -27,3 +27,12 @@
     (reading-lists.state/allow-increment? db)))
 
 (def allow-increment-sub ::allow-increment?)
+
+
+(rf/reg-sub
+  ::any?
+  (fn [db]
+    (reading-lists.state/any-reading-lists? db)))
+
+
+(def any-sub ::any?)

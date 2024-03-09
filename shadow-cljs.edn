@@ -22,7 +22,6 @@
         {;; set this to solve the "failed to convert sources" issue in firestore
          :output-feature-set :es7}
 
-        :build-hooks [(dev.deploy/reset-for-dev-hook)]
 
         :dev {:modules {:main {:entries [dev.core]
                                :init-fn dev.core/init!}}
@@ -30,11 +29,13 @@
               :closure-defines {dev.firebase.core/use-auth-emulator? true
                                 dev.firebase.core/use-firestore-emulator? true
                                 dev.firebase.core/use-storage-emulator? false
-                                dev.firebase.core/use-functions-emulator-from-web? false}}
+                                dev.firebase.core/use-functions-emulator-from-web? false}
+              :build-hooks [(dev.deploy/reset-for-dev-hook)]
+}
 
         :release {:modules {:main {:entries [bible.web.core]
                                    :init-fn bible.web.core/init!}}
-                  :build-hooks [(dev.deploy/app-post-build-release-hook)]}}
+                  :build-hooks [(dev.deploy/reset-for-dev-hook) (dev.deploy/app-post-build-release-hook)]}}
 
   #_#_:functions {:target           :node-library
                   :js-options       {:js-package-dirs ["firebase/functions/node_modules"]}

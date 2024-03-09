@@ -12,6 +12,10 @@
     (empty? readling-list-db-changes)))
 
 
+(defn any-reading-lists? [db]
+  (not (empty? (::reading-lists db))))
+
+
 (defn set-loaded-on-login [db]
   (assoc db ::loaded-on-login? true))
 
