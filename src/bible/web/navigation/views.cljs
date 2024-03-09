@@ -40,10 +40,12 @@
     [wrapper
      (cond
        (= current-page navigation.routes/dashboard-page)
-       [:div
-        [reading-lists.views/reading-list]
-        [preferences.views/set-translation]
-        [projection.views/read-counts]]
+       [:div.columns
+        [:div.column.is-half
+         [reading-lists.views/reading-list]
+         [preferences.views/set-translation]]
+        [:div.column
+         [projection.views/read-counts]]]
 
        (= current-page navigation.routes/landing-page)
        [:h1 "landing"]

@@ -2,7 +2,8 @@
   (:require [bible.web.content :as cn]
             [bible.web.reading-lists.events :as reading-lists.events]
             [bible.web.preferences.events :as preferences.events]
-            [bible.domain.translations :as domain.translations]))
+            [bible.domain.translations :as domain.translations]
+            [bible.web.preferences.views :as preferences.views]))
 
 
 (def max-allowed-days 100)
@@ -37,9 +38,7 @@
      [:div.control
       [:div.select
        [:select#translation-select
-        (->> domain.translations/translations
-             (map (fn [{:keys [id title]}]
-                    [:option {:key id :value id} (str title)])))]]]]
+        preferences.views/translation-options]]]]
 
     [:div.field
      [:div.control

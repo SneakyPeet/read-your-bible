@@ -5,4 +5,14 @@
 * Loading indicator (loading page and lists)
 
 
+Charts
+
+donut for read count  [rechart echarts apex]
+multi donuts for list read progress (radial bar) [rechart echarts apex]
+timeline [apex]
+area chart for lists [rechart echarts apex]
+calendar heatmap [echarts apex]
+sparklines [rechart echarts apex]
+fancy book read charts [echarts]
+
 logout should be right aligned on full screen (use nav-left)
