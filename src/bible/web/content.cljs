@@ -7,14 +7,16 @@
   {:tongue/fallback :en
 
    :en
-   {:navigation/login  "login/register"
+   {:app/title "Read Your Bible"
+
+    :navigation/login  "login"
     :navigation/logout "logout"
 
-    :registration/heading "Welcome to TODO"
-    :registration/explainer-text "TODO Explain"
+    :registration/heading "Let's get started"
+    :registration/explainer-text "We just need a little bit of information to get you going. If you have never used Professor Grant Horner's Bible-Reading System, Leave the Starting Day as 1. If you have select the day you want to start on."
     :registration/button-text "Start"
 
-    :login/explainer-text "TODO"
+    :login/explainer-text "How do you want to log in?"
 
     :tongue/missing-key "Missing key {1}"
 
@@ -27,6 +29,8 @@
 
 (defn value [& keys]
   (apply translate default-dict keys))
+
+(defn app-title [] (value :app/title))
 
 (defn navigation-login [] (value :navigation/login))
 (defn navigation-logout [] (value :navigation/logout))

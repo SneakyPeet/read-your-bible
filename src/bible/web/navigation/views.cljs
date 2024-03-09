@@ -21,18 +21,51 @@
                                       [#(navigation.events/goto-route navigation.routes/login-page)
                                        (cn/navigation-login)])]
     [:div
-     [:nav.navbar {:role       "navigation"
-                   :aria-label "main navigation"}
-      [:div.navbar-brand {:style {:justify-content "end"}}
-       [:div.navbar-item
-        [:div.buttons
-         [:a.button.is-primary.is-small
-          {:on-click auth-fn}
-          auth-button-title]]]]]
+     #_(when-not logged-in?
+       [:nav.navbar {:role       "navigation"
+                     :aria-label "main navigation"}
+        [:div.navbar-brand {:style {:justify-content "end"}}
+         [:div.navbar-item [:h1.heading.mt-1.has-text-weight-bold (cn/app-title)]]
+         [:div.navbar-item
+          [:div.buttons
+           [:a.button.is-primary.is-small
+            {:on-click auth-fn}
+            auth-button-title]]]]])
      [:section.section.pt-0
       [:div.container
+       [:div #_{:style {:min-height "80vh"}}
+        child]
+       (when logged-in?
+         [:div.content
+          [:hr]
+          [:ul
+           [:li
+            [:a
+             {:on-click auth-fn}
+             auth-button-title]]]])]]]))
 
-       child]]]))
+
+(defn landing []
+  [:div
+   [:div.content.mt-5
+    [:div
+     [:h1.title.has-text-centered "Welcome to the read your bible app!"]
+     [:p.has-text-centered "This app is an electronic bookmark for the"
+      [:strong " Professor Grant Horner's Bible-Reading System"]]
+     #_[:div
+        [:h5 "How to use it?"]
+        [:ul
+         [:li "Read all 10 chapters as displayed on the page."]
+         [:li "You can click the name of a book to mark it as read."]
+         [:li "Click '>' to load the chapters for the next days reading."]
+         [:li "The app saves the selected day on your current device."]
+         [:li "You can also type in the day you want to jump to."]
+         [:li "The blue progress bar shows chapter progress."]
+         [:li "The green progress bar shows list progress."]
+         [:li "Once you complete a list, that list will start over."]
+         [:li "For more information, the plan can be downloaded " [:a {:href "/download.pdf" :target "_blank"} "here"] "."]]]
+     ]]
+   [authentication.views/login-page]])
 
 
 (defn current-page []
@@ -40,7 +73,7 @@
     [wrapper
      (cond
        (= current-page navigation.routes/dashboard-page)
-       [:div.columns
+       [:div.columns.mt-5
         [:div.column.is-half
          [reading-lists.views/reading-list]
          [preferences.views/set-translation]]
@@ -48,7 +81,8 @@
          [projection.views/all-charts]]]
 
        (= current-page navigation.routes/landing-page)
-       [:h1 "landing"]
+       [landing
+        ]
 
        (= current-page navigation.routes/loading-page)
        [:h1 "Loading"]
