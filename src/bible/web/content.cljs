@@ -16,7 +16,10 @@
 
     :login/explainer-text "TODO"
 
-    :tongue/missing-key "Missing key {1}"}})
+    :tongue/missing-key "Missing key {1}"
+
+    :translation/en "English: "
+    :translation/af "Afrikaans: "}})
 
 
 (def ^:private translate (tongue/build-translate dictionary))
@@ -33,3 +36,6 @@
 (defn registration-button-text [] (value :registration/button-text))
 
 (defn login-explainer-text [] (value :login/explainer-text))
+
+(defn translation-language [l]
+  (value (keyword (str "translation/" l))))

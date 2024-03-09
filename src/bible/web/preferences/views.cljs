@@ -2,7 +2,13 @@
   (:require [re-frame.core :as rf]
             [bible.web.preferences.events :as preferences.events]
             [bible.web.preferences.subs :as preferences.subs]
-            [bible.domain.translations :as domain.translations]))
+            [bible.domain.translations :as domain.translations]
+            [bible.web.content :as cn]))
+
+(def translation-options
+  (->> domain.translations/translations
+       (map (fn [{:keys [id title lang]}]
+              [:option {:key id :value id} (str (cn/translation-language lang) title)]))))
 
 (defn set-translation []
   (let [translation @(rf/subscribe [preferences.subs/translation-sub])]
@@ -12,6 +18,4 @@
        [:select#translation-select
         {:default-value translation
          :on-change #(preferences.events/set-translation (.. % -target -value))}
-        (->> domain.translations/translations
-             (map (fn [{:keys [id title]}]
-                    [:option {:key id :value id} (str title)])))]]]]))
+        translation-options]]]]))
