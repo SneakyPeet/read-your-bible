@@ -2,6 +2,8 @@
   (:require [re-frame.core :as rf]
             [bible.web.projections.state :as projections.state]
             [bible.domain.projections :as domain.projections]
+            [bible.web.reading-lists.state :as reading-lists.state]
+            [bible.domain.reading-lists :as domain.reading-lists]
             ["firebase/firestore" :as firestore]))
 
 
@@ -79,4 +81,30 @@
                                       :y total}))
                               (sort-by :x))}))))))
 
+
 (def activity-sub ::activity)
+
+
+(rf/reg-sub
+  ::lists-read
+  (fn [db]
+    (let [projections (projections.state/projection-state-by-type db)
+          lists-times-read (get projections domain.projections/projection-lists-times-read)
+          lists (reading-lists.state/reading-lists-by-id db)
+          stats (->> lists-times-read
+                     (map (fn [{:keys [list-id chapters-read]}]
+                            (let [list           (get lists list-id)
+                                  total-chapters (domain.reading-lists/total-chapters list)
+                                  n              (/ chapters-read total-chapters)
+                                  n'             (- n (js/Math.floor n))
+                                  percent        (js/Math.round (* 100 n'))]
+                              {:title    (:title list)
+                               :position (:position list)
+                               :percent  percent})))
+                     (sort-by :position)
+                     )]
+      {:labels (map :title stats)
+       :series (map :percent stats)})))
+
+
+(def lists-read-sub ::lists-read)

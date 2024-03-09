@@ -64,9 +64,33 @@
                         :xaxis {:labels {:show false}}
                         :yaxis {:labels {:show false}}}}]]))
 
+;; Lists read
+
+(defn lists-read []
+  (let [{:keys [labels series]} @(rf/subscribe [projections.subs/lists-read-sub])]
+    [:div
+     [rchart {:options {:labels labels
+                        :plotOptions {:radialBar {:hollow     {:margin 0 :size "15%"}
+                                                  :track      {:show        true
+                                                               :strokeWidth "80%"}
+                                                  :dataLabels {:showOn "always"
+                                                               :name   {:offsetY  -5
+                                                                        :show     true
+                                                                        :color    "#888"
+                                                                        :fontSize "13px"}
+                                                               :value  {:color    "#888"
+                                                                        :fontSize "13px"
+                                                                        :show     true
+                                                                        :offsetY  -5}}}}
+                        :stroke {:lineCap "round"}}
+              :series  series
+              :type    "radialBar"
+           #_#_   :height  140}]]))
+
 ;; Page
 
 (defn all-charts []
   [:div
    [read-counts]
-   [activity]])
+   [activity]
+   [lists-read]])

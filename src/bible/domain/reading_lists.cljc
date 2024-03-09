@@ -65,6 +65,10 @@
     :read-index 0}])
 
 
+(defn total-chapters [reading-list]
+  (count (domain.books/list-chapters (:books reading-list))))
+
+
 (defn- step-reading-list
   [f reading-list date]
   (let [{:keys [books read-index]} reading-list

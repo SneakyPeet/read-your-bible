@@ -32,6 +32,10 @@
   (vals (::reading-lists db)))
 
 
+(defn reading-lists-by-id [db]
+  (::reading-lists db))
+
+
 (defn read-list [db id]
   (get-in db [::reading-lists id]))
 

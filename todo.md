@@ -7,7 +7,6 @@
 
 Charts
 
-donut for read count  [rechart echarts apex]
 multi donuts for list read progress (radial bar) [rechart echarts apex]
 timeline [apex]
 area chart for lists [rechart echarts apex]
