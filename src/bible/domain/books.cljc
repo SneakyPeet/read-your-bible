@@ -90,6 +90,10 @@
   (get-in books-by-id [book-id :title]))
 
 
+(defn book-total-chapters [book-id]
+  (get-in books-by-id [book-id :chapters]))
+
+
 (defn book-chapter-numbers [book-id]
   (let [chapters (get-in books-by-id [book-id :chapters])]
     (->> (range 1 (inc chapters))

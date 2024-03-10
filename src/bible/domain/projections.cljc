@@ -166,7 +166,7 @@
         (-> state
             (update :daily update-streak)
             (update :reading-lists update-readlist-streaks event))
-        state))))
+        state)))) ;;TODO UPDATE FOR MANUAL CAPTURE
 
 
 (def read-history-projection
@@ -196,7 +196,7 @@
                (sort-by #(.-seconds (:date %)))
                reverse
                (take 365)))
-        state))))
+        state)))) ;; TODO ADD MANUAL ENTRIES
 
 
 (def timeline-projection

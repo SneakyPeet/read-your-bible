@@ -11,6 +11,7 @@
             [bible.web.authentication.subs :as authentication.subs]
             [bible.web.projections.views :as projection.views]
             [bible.web.preferences.views :as preferences.views]
+            [bible.web.manual-entires.views :as manual-entries.views]
             [bible.web.content :as cn]))
 
 
@@ -83,6 +84,7 @@
         [reading-lists.views/reading-list]
         [preferences.views/set-translation]]
        [:div.column
+        [manual-entries.views/capture]
         [projection.views/all-charts]]]
       [loader])))
 

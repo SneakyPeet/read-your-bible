@@ -107,3 +107,10 @@
 
 
 (def lists-read-sub ::lists-read)
+
+
+#_(rf/reg-sub
+  ::read-list-streak
+  :<- [::projection-state-by-type]
+  (fn [db]
+    (let [streaks (get projections domain.projections/projection-lists-times-read)])))

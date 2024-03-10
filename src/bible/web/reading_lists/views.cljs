@@ -11,17 +11,25 @@
       [:h1 "LOADING"]
       [:div
        (->> reading-lists
-            (map (fn [{:keys [id title chapter youversion-url read-today?]}]
+            (map (fn [{:keys [id title chapter youversion-url saturation]}]
                    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.mb-2
                     {:key   id
                      :style {:border-bottom "#dbdbdb 1px solid"}}
 
                     [:div
-                     [:label.heading.mb-0 title]
+                     [:label.heading.mb-0 {:position "relative"}
+                      title
+                      #_[:span.has-background-success-light.has-text-primary
+                       {:style {:font-size "0.5rem"
+                                :margin "1px 0.3rem"
+                                :padding "0.06rem"
+                                :border-radius "5px"
+                                :position "absolute"
+                                }} 10]]
                      [:a.is-size-5
-                      {:href youversion-url
-                       :target "_blank"
-                       :class (if read-today? "has-text-primary" "has-text-grey-dark")}
+                      {:style {:color (str "hsl(171 " saturation "% 41% / 1)")}
+                       :href youversion-url
+                       :target "_blank"}
                       chapter]]
                     [:div.buttons.is-align-items-flex-end
                      #_[:a.button.is-small.mr-5

@@ -23,6 +23,8 @@
             [bible.web.preferences.state :as preferences.state]
             [bible.web.preferences.events :as preferences.events]
 
+            [bible.web.manual-entires.state :as manual-entries.state]
+
             [bible.web.firebase.firestore :as firestore-fx]))
 
 
@@ -34,7 +36,8 @@
     (authentication.state/initial-state [::logged-in] [::logged-out])
     (reading-lists.state/initial-state)
     (projections.state/initial-state)
-    (preferences.state/initial-state)))
+    (preferences.state/initial-state)
+    (manual-entries.state/initial-state)))
 
 
 (rf/reg-event-fx

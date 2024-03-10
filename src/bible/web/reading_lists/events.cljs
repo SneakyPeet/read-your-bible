@@ -75,8 +75,7 @@
           projections (projections.state/projections db)
           user-id (authentication.state/user-id db)]
       {:db (-> db
-               (reading-lists.state/prevent-increment)
-               (reading-lists.state/set-read-today read-list-id))
+               (reading-lists.state/prevent-increment))
        ::firestore-fx/write-batch
        {:mutations (reading-lists.db/increment-reading-list-mutations
                      user-id read-list projections)}})))

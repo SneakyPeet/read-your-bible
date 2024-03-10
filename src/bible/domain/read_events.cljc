@@ -32,7 +32,7 @@
    :book-id     book-id
    :chapter     chapter-id
    :read-date   read-date
-   :create-date "TODO"
+   :create-date read-date
    :type        chapter-read-evt-type-manual-entry
    :type-data   {}})
 
