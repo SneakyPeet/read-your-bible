@@ -38,6 +38,7 @@
 (defn times-read []
   (let [stats @(rf/subscribe [projections.subs/times-read-sub])]
     [:div
+     [:div.heading.has-text-right "times read"]
      (->> stats
           (map (fn [{:keys [title percent read-total]}]
                  [:div.mb-1.has-background-white-ter
