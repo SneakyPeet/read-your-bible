@@ -162,11 +162,14 @@
       {:daily initial-streak-data
        :reading-lists []})
     (next-state [_ state event]
-      (if (domain.read-events/list-read-event? event)
-        (-> state
-            (update :daily update-streak)
-            (update :reading-lists update-readlist-streaks event))
-        state)))) ;;TODO UPDATE FOR MANUAL CAPTURE
+      (cond-> state
+
+        (or (domain.read-events/list-read-event? event)
+            (domain.read-events/manual-read-event? event))
+        (update :daily update-streak)
+
+        (domain.read-events/list-read-event? event)
+        (update :reading-lists update-readlist-streaks event)))))
 
 
 (def read-history-projection
@@ -177,7 +180,8 @@
     (initial-state [_]
       [])
     (next-state [_ state event]
-      (if (domain.read-events/list-read-event? event)
+      (if (or (domain.read-events/list-read-event? event)
+              (domain.read-events/manual-read-event? event))
         (let [lookup           (->> state
                                     (map (juxt #(.-seconds (:date %)) identity))
                                     (into {}))
@@ -196,7 +200,7 @@
                (sort-by #(.-seconds (:date %)))
                reverse
                (take 365)))
-        state)))) ;; TODO ADD MANUAL ENTRIES
+        state))))
 
 
 (def timeline-projection

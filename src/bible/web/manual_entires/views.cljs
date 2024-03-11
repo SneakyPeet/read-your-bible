@@ -17,7 +17,7 @@
     [:div
      (if capturing?
        [:div.has-text-centered
-        [:div.block
+        [:div
          [:h3.is-size-3.has-font-weight-bold "Manual capture"]
          [:p "Pick a book and chapters to manually mark as read today"]]
         [:div.field

@@ -21,16 +21,6 @@
     (projections.state/projection-state-by-type db)))
 
 
-(rf/reg-sub
-  ::times-read
-  :<- [::projection-state-by-type]
-  (fn [projections]
-    (let [{:keys [bible testaments]} (get projections domain.projections/projection-type-times-read)]
-      (into [["Bible" (round-2 (* 100 bible))]]
-            (map (fn [{:keys [testament total]}] [testament (* 100 total)]) testaments)))))
-
-(def times-read-sub ::times-read)
-
 ;;https://gist.github.com/remvee/2735ee151ab6ec075255
 (defn week-number
   "Week number according to the ISO-8601 standard, weeks starting on
@@ -85,32 +75,45 @@
 (def activity-sub ::activity)
 
 
-(rf/reg-sub
-  ::lists-read
-  (fn [db]
-    (let [projections (projections.state/projection-state-by-type db)
-          lists-times-read (get projections domain.projections/projection-lists-times-read)
-          lists (reading-lists.state/reading-lists-by-id db)
-          stats (->> lists-times-read
-                     (map (fn [{:keys [list-id chapters-read]}]
-                            (let [list           (get lists list-id)
-                                  total-chapters (domain.reading-lists/total-chapters list)
-                                  n              (/ chapters-read total-chapters)
-                                  n'             (- n (js/Math.floor n))
-                                  percent        (js/Math.round (* 100 n'))]
-                              {:title    (:title list)
-                               :position (:position list)
-                               :percent  percent})))
-                     (sort-by :position))]
-      {:labels (map :title stats)
-       :series (map :percent stats)})))
-
-
-(def lists-read-sub ::lists-read)
-
-
 #_(rf/reg-sub
   ::read-list-streak
   :<- [::projection-state-by-type]
   (fn [db]
     (let [streaks (get projections domain.projections/projection-lists-times-read)])))
+
+
+;; NEW
+
+(rf/reg-sub
+  ::times-read
+  (fn [db]
+    (let [projections (projections.state/projection-state-by-type db)
+          {:keys [bible
+                  testaments]} (get projections domain.projections/projection-type-times-read)
+          lists-times-read (get projections domain.projections/projection-lists-times-read)
+          lists (reading-lists.state/reading-lists-by-id db)
+          list-stats (->> lists-times-read
+                          (map (fn [{:keys [list-id chapters-read]}]
+                                 (let [list           (get lists list-id)
+                                       total-chapters (domain.reading-lists/total-chapters list)
+                                       n              (/ chapters-read total-chapters)
+                                       n'             (- n (js/Math.floor n))
+                                       percent        (js/Math.round (* 100 n'))]
+                                   {:title    (:title list)
+                                    :position (:position list)
+                                    :read-total (round-2 n)
+                                    :percent  percent})))
+                          (sort-by :position))
+          testament-stats (->> testaments
+                               (map (fn [{:keys [testament total]}]
+                                      {:title (str testament " Testament")
+                                       :read-total total
+                                       :percent (* 100 (- total (js/Math.floor total)))})))]
+      (-> [{:title "Whole Bible"
+            :read-total bible
+            :percent (* 100 (- bible (js/Math.floor bible)))}]
+          (into testament-stats)
+          (into list-stats)))))
+
+
+(def times-read-sub ::times-read)

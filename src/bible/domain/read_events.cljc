@@ -37,5 +37,8 @@
    :type-data   {}})
 
 
+(defn manual-read-event? [event]
+  (= chapter-read-evt-type-manual-entry (:type event)))
+
 (defn read-on-registration-event [reading-list date]
   (assoc (list-read-event reading-list date) :type chapter-read-evt-registration))

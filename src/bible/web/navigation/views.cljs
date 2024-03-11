@@ -39,12 +39,10 @@
         child]
        (when logged-in?
          [:div.content
-          [:hr]
-          [:ul
-           [:li
-            [:a
-             {:on-click auth-fn}
-             auth-button-title]]]])]]]))
+          [:div.buttons.is-centered
+           [:a.button
+            {:on-click auth-fn}
+            auth-button-title]]])]]]))
 
 
 (defn landing []
@@ -79,13 +77,17 @@
 (defn app []
   (let [any-reading-lists? @(rf/subscribe [reading-lists.subs/any-sub])]
     (if any-reading-lists?
-      [:div.columns.mt-2
-       [:div.column.is-half
-        [reading-lists.views/reading-list]
-        [preferences.views/set-translation]]
-       [:div.column
-        [manual-entries.views/capture]
-        [projection.views/all-charts]]]
+      [:div
+       [:div.columns.mt-2
+        [:div.column.is-half
+         [:div.block [reading-lists.views/reading-list]]
+         [:div
+          [:div.block [preferences.views/set-translation]]
+          [:div.block [manual-entries.views/capture]]]
+         ]
+        [:div.column
+
+         [:div.block [projection.views/all-charts]]]]]
       [loader])))
 
 

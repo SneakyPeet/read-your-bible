@@ -9,38 +9,6 @@
   (r/adapt-react-class chart))
 
 
-;; Donut Progress Charts
-
-(defn donut-progress-opts [title value]
-  {:key title
-   :options {:labels [(.toUpperCase title)]
-             :plotOptions {:radialBar {:hollow {:margin 0 :size "55%"}
-                                       :track {:show true
-                                               :strokeWidth "80%"}
-                                       :dataLabels {:showOn "always"
-                                                    :name   {:offsetY  -5
-                                                             :show     true
-                                                             :color    "#888"
-                                                             :fontSize "13px"}
-                                                    :value  {:color    "#888"
-                                                             :fontSize "13px"
-                                                             :show     true
-                                                             :offsetY -5}}}}
-             :stroke {:lineCap "round"}}
-   :series [value]
-   :type "radialBar"
-   :height 140})
-
-
-(defn read-counts []
-  (let [counts @(rf/subscribe [projections.subs/times-read-sub])]
-    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center
-     (->> counts
-          (map (fn [[title total]]
-                 [:div {:key title
-                        :style {:width "33%"}}
-                  [rchart (donut-progress-opts title total)]])))
-     ]))
 
 ;; Activity
 
@@ -64,33 +32,39 @@
                         :xaxis {:labels {:show false}}
                         :yaxis {:labels {:show false}}}}]]))
 
-;; Lists read
 
-(defn lists-read []
-  (let [{:keys [labels series]} @(rf/subscribe [projections.subs/lists-read-sub])]
+;; NEW
+
+(defn times-read []
+  (let [stats @(rf/subscribe [projections.subs/times-read-sub])]
     [:div
-     [rchart {:options {:labels labels
-                        :plotOptions {:radialBar {:hollow     {:margin 0 :size "15%"}
-                                                  :track      {:show        true
-                                                               :strokeWidth "80%"}
-                                                  :dataLabels {:showOn "always"
-                                                               :name   {:offsetY  -5
-                                                                        :show     true
-                                                                        :color    "#888"
-                                                                        :fontSize "13px"}
-                                                               :value  {:color    "#888"
-                                                                        :fontSize "13px"
-                                                                        :show     true
-                                                                        :offsetY  -5}}}}
-                        :stroke {:lineCap "round"}}
-              :series  series
-              :type    "radialBar"
-           #_#_   :height  140}]]))
+     (->> stats
+          (map (fn [{:keys [title percent read-total]}]
+                 [:div.mb-1.has-background-white-ter
+                  {:key title
+                   :style {:height "2rem"
+                           :width "100%"
+                           :position "relative"}}
+
+                  [:div.has-background-primary
+                   {:style {:position "absolute"
+                            :top 0
+                            :height           "100%"
+                            :width            (str percent "%")
+                            :z-index 0}}]
+                  [:div.p-2 {:style {:position "relative"}}
+                   [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between
+                    [:div.heading title]
+                    [:div.heading (.toFixed read-total 2)]]]
+
+                  ])))]))
 
 ;; Page
 
+
 (defn all-charts []
-  [:div
-   [read-counts]
+  [:div.mb-5
+   [:div [times-read]]
+  #_#_#_ [read-counts]
    [activity]
    [lists-read]])
