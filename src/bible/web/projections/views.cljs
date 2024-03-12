@@ -38,7 +38,7 @@
 (defn times-read []
   (let [stats @(rf/subscribe [projections.subs/times-read-sub])]
     [:div
-     [:div.heading.has-text-right "times read"]
+     [:div.heading.has-text-right "progress"]
      (->> stats
           (map (fn [{:keys [title percent read-total]}]
                  [:div.mb-1.has-background-white-ter
@@ -56,18 +56,20 @@
                   [:div.p-2 {:style {:position "relative"}}
                    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between
                     [:div.heading title]
-                    [:div.heading (.toFixed read-total 2)]]]])))]))
+                    [:div.heading
+                     {:class (when (>= read-total 1) "has-text-primary")}
+                     (.toFixed read-total 2)]]]])))]))
 
 
 (defn books-read []
   (let [stats @(rf/subscribe [projections.subs/books-read-sub])]
     [:div
-     [:div.heading.has-text-right "books read"]
+     [:div.heading.has-text-right "books"]
      (->> stats
           (map (fn [{:keys [title total read read-before?]}]
                  [:div
                   {:key title}
-                  [:div.heading {:style {:margin-bottom "0"}} title total]
+                  [:div.heading {:style {:margin-bottom "0"}} title]
                   [:div.is-flex.is-flex-wrap-wrap.is-justify-content-start.is-align-items-center
                    (let [base-background (if read-before?
                                            "hsl(171, 100%, 80%)"
@@ -83,6 +85,12 @@
                                                                     "hsl(171, 100%, 41%)"
                                                                     base-background)}}]))))]])))]))
 
+
+(defn streak []
+  (let [{:keys [total previous-max currently-in-streak?]} (get @(projections.subs/streaks-sub) "daily")]
+    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.heading.has-text-primary
+     [:div "Streak: " (if currently-in-streak? total 0)]
+     [:div "Longest: " previous-max]]))
 ;; Page
 
 

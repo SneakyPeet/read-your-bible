@@ -153,6 +153,17 @@
         vals)))
 
 
+(defn currently-in-streak [streak]
+  (let [midnight-date (.toDate (firestore/Timestamp.now))
+        _ (.setHours midnight-date 0 0 0 0)
+        midnight-seconds (-> midnight-date
+                          (firestore/Timestamp.fromDate)
+                          (.-seconds))
+        check-seconds (- midnight-seconds seconds-in-a-day)]
+    (>= (.-seconds (:last-read-date streak))
+        check-seconds)))
+
+
 (def streaks-projection
   (reify ChapterReadEventProjection
 

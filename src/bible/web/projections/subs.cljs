@@ -75,15 +75,24 @@
 
 (def activity-sub ::activity)
 
-
-#_(rf/reg-sub
-  ::read-list-streak
-  :<- [::projection-state-by-type]
-  (fn [db]
-    (let [streaks (get projections domain.projections/projection-lists-times-read)])))
-
-
 ;; NEW
+
+(rf/reg-sub
+  ::streaks
+  (fn [db]
+    (let [projections (projections.state/projection-state-by-type db)
+          {:keys [daily reading-lists] :as t} (get projections domain.projections/projection-streaks)]
+      (->> (cons (assoc daily :list-id "daily") reading-lists )
+           (map (fn [s]
+                  [(:list-id s)
+                   (assoc s :currently-in-streak?
+                          (domain.projections/currently-in-streak s))]))
+           (into {})))))
+
+
+(defn streaks-sub []
+  (rf/subscribe [::streaks]))
+
 
 (rf/reg-sub
   ::times-read
