@@ -1,18 +1,18 @@
 (ns bible.web.projections.views
   (:require [re-frame.core :as rf]
             [bible.web.projections.subs :as projections.subs]
-            ["react-apexcharts$default" :as chart]
+         #_   ["react-apexcharts$default" :as chart]
             [reagent.core :as r]))
 
 
-(def rchart
+#_(def rchart
   (r/adapt-react-class chart))
 
 
 
 ;; Activity
 
-(defn activity []
+#_(defn activity []
   (let [activity @(rf/subscribe [projections.subs/activity-sub])]
     [:div #_{:style {:overflow-y "scroll"}}
      [rchart {:type "heatmap"
@@ -56,16 +56,37 @@
                   [:div.p-2 {:style {:position "relative"}}
                    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between
                     [:div.heading title]
-                    [:div.heading (.toFixed read-total 2)]]]
+                    [:div.heading (.toFixed read-total 2)]]]])))]))
 
-                  ])))]))
+
+(defn books-read []
+  (let [stats @(rf/subscribe [projections.subs/books-read-sub])]
+    [:div
+     [:div.heading.has-text-right "books read"]
+     (->> stats
+          (map (fn [{:keys [title total read read-before?]}]
+                 [:div
+                  {:key title}
+                  [:div.heading {:style {:margin-bottom "0"}} title total]
+                  [:div.is-flex.is-flex-wrap-wrap.is-justify-content-start.is-align-items-center
+                   (let [base-background (if read-before?
+                                           "hsl(171, 100%, 80%)"
+                                           "hsl(0, 0%, 96%)")]
+                     (->> (range 1 (inc total))
+                          (map (fn [i]
+                                 [:div {:key   (str title i)
+                                        :style {:margin        "1px"
+                                                :border-radius "2px"
+                                                :width         "0.4rem"
+                                                :height        "0.4rem"
+                                                :background-color (if (<= i read)
+                                                                    "hsl(171, 100%, 41%)"
+                                                                    base-background)}}]))))]])))]))
 
 ;; Page
 
 
 (defn all-charts []
   [:div.mb-5
-   [:div [times-read]]
-  #_#_#_ [read-counts]
-   [activity]
-   [lists-read]])
+   [:div.block [times-read]]
+   [:div [books-read]]])

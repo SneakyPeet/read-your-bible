@@ -4,6 +4,7 @@
             [bible.domain.projections :as domain.projections]
             [bible.web.reading-lists.state :as reading-lists.state]
             [bible.domain.reading-lists :as domain.reading-lists]
+            [bible.domain.books :as domain.books]
             ["firebase/firestore" :as firestore]))
 
 
@@ -117,3 +118,23 @@
 
 
 (def times-read-sub ::times-read)
+
+
+(rf/reg-sub
+  ::books-read
+  (fn [db]
+    (let [projections (projections.state/projection-state-by-type db)
+          {:keys [books]} (get projections domain.projections/projection-type-times-read)]
+      (->> books
+           (map (fn [{:keys [book-id chapters]}]
+                  (let [read-counts (map :total chapters)
+                        min-read    (apply min read-counts)]
+                    {:title        (domain.books/book-title book-id)
+                     :total        (count chapters)
+                     :read-before? (not (zero? min-read))
+                     :read         (->> chapters
+                                        (filter #(> (:total %) min-read))
+                                        count)})))))))
+
+
+(def books-read-sub ::books-read)
