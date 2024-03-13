@@ -1,4 +1,4 @@
-# Shadow CLJS Firebase Start Project
+# Read your bible web app
 
 https://read-the-bible.web.app/
 
