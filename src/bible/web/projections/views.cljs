@@ -90,7 +90,7 @@
   (let [{:keys [total previous-max currently-in-streak?]} (get @(projections.subs/streaks-sub) "daily")]
     [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.heading.has-text-primary
      [:div "Streak: " (if currently-in-streak? total 0)]
-     [:div "Longest: " previous-max]]))
+     [:div "Longest: " (max total previous-max)]]))
 ;; Page
 
 

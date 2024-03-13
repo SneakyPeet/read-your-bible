@@ -13,15 +13,20 @@
       [:h1 "LOADING"]
       [:div
        (->> reading-lists
-            (map (fn [{:keys [id title chapter youversion-url saturation]}]
+            (map (fn [{:keys [id title chapter youversion-url saturation next?]}]
                    #_(let [{:keys [currently-in-streak? total]} (get streaks id)])
                    [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.mb-2
                     {:key   id
                      :style {:border-bottom "#dbdbdb 1px solid"}}
 
                     [:div
-                     [:label.heading.mb-0 {:position "relative"}
+                     [:label.heading.mb-0.is-flex.is-flex-wrap-nowrap.is-align-items-center
                       title
+                      (when next?
+                        [:span.p-1.ml-2,
+                         {:style {:font-size "0.4rem"
+                                  :background-color "rgb(153, 255, 240)"
+                                  :border-radius "2px"}} "READ NEXT"])
                       #_(when currently-in-streak?
                           [:span
                            {:style {:font-size        "0.5rem"
