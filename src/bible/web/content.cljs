@@ -13,7 +13,7 @@
     :navigation/logout "logout"
 
     :registration/heading "Let's get started"
-    :registration/explainer-text "We just need a little bit of information to get you going. If you have never used Professor Grant Horner's Bible-Reading System, Leave the Starting Day as 1. If you have select the day you want to start on."
+    :registration/explainer-text "We just need a little bit of information to get you going. If you have never used Professor Grant Horner's Bible-Reading System, leave the Starting day as 1. If you have, select the day you want to start on."
     :registration/button-text "Start"
 
     :login/explainer-text "How do you want to log in?"
