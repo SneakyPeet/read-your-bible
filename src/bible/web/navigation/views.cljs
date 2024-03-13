@@ -42,7 +42,9 @@
       " Professor Grant Horner's Bible-Reading System"]]]
    [:div.section.content
     [:h2.title.is-4 "How does it work?"]
-    [:p [:b "Click on the next chapter to read."]" This will open the youversion app and you can pick which translation to use."]
+    [:p [:b "Click on the next chapter to read."]" This will open the "
+     [:a {:href "https://www.youversion.com/" :target "_blank"} "youversion.com"]
+     " bible app and you can pick which translation to use."]
     [:img.mb-5 {:src "/img/step1.png" :style {:max-width "300px"}}]
     [:p "Once you have read the chapter" [:b " click the button to mark the chapter as read."]]
     [:img.mb-5 {:src "/img/step2.png" :style {:max-width "300px"}}]
@@ -56,6 +58,8 @@
     [:img.mb-5 {:src "/img/list-projection.png" :style {:max-width "300px"}}]
     [:p [:b "See"] " how much of the bible you have read."]
     [:img.mb-5 {:src "/img/chapter-projection.png" :style {:max-width "300px"}}]
+    [:p [:b "Learn more"] " about the Professor Grant Horner's Bible-Reading System " [:a {:href "/download.pdf" :target "_blank"}"here"] "."]
+    [:p "Save this website to your mobile home screen to use it like a normal app"]
     [:hr]
     [:div.block [authentication.views/login-page]]
     [:div {:style {:margin-bottom "5rem"}}]]])

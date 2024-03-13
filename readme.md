@@ -16,6 +16,8 @@ npx firebase deploy --only firestore:rules
 
 npx firebase deploy --only hosting --project bible-reading-plan
 
+npx shadow-cljs release web && cd firebase && npx firebase deploy --only hosting --project bible-reading-plan && cd ..
+
 # Shaddow CLJS
 
 ## compile a build once and exit

@@ -11,7 +11,6 @@
    "CEVDCI" "Contemporary English Version Interconfessional Edition" "en" 303
    "CEVUK" "Contemporary English Version (Anglicised) 2012" "en" 294
    "CJB" "Complete Jewish Bible" "en" 1275
-   "CPDV" "Catholic Public Domain Version" "en" 42
    "CSB" "Christian Standard Bible" "en" 1713
    "DARBY" "Darby's Translation 1890" "en" 478
    "DRC1752" "Douay-Rheims Challoner Revision 1752" "en" 55
@@ -21,7 +20,6 @@
    "FBV" "Free Bible Version" "en" 1932
    "FNVNT" "First Nations Version" "en" 3633
    "GNBDC" "Good News Bible (British) with DC section 2017" "en" 416
-   "GNBDK" "Good News Bible (British) Catholic Edition 2017" "en" 431
    "GNBUK" "Good News Bible (British Version) 2017" "en" 296
    "GNT" "Good News Translation" "en" 68
    "GNTD" "Good News Translation (US Version)" "en" 69
@@ -39,7 +37,6 @@
    "MEV" "Modern English Version" "en" 1171
    "MP1650" "Psalms of David in Metre 1650 (Scottish Psalter)" "en" 1365
    "MP1781" "Scottish Metrical Paraphrases 1781" "en" 3051
-   "MSG" "The Message" "en" 97
    "NABRE" "New American Bible, revised edition" "en" 463
    "NASB1995" "New American Standard Bible - NASB 1995" "en" 100
    "NASB2020" "New American Standard Bible - NASB" "en" 2692
@@ -52,7 +49,6 @@
    "NLT" "New Living Translation" "en" 116
    "NMV" "New Messianic Version Bible" "en" 2135
    "NRSV" "New Revised Standard Version" "en" 2016
-   "NRSV-CI" "New Revised Standard Version Catholic Interconfessional" "en" 2015
    "NRSVUE" "New Revised Standard Version Updated Edition 2021" "en" 3523
    "PEV" "Plain English Version" "en" 2530
    "RAD" "Radiate New Testament" "en" 2753
@@ -62,10 +58,8 @@
    "RV1885" "Revised Version 1885" "en" 477
    "RV1895" "Revised Version with Apocrypha 1885, 1895" "en" 1922
    "TCENT" "The Text-Critical English New Testament" "en" 3427
-   "TEG" "Isaiah 1830, 1842 (John Jones alias Ioan Tegid)" "en" 3010
    "TLV" "Tree of Life Version" "en" 314
    "TOJB2011" "The Orthodox Jewish Bible" "en" 130
-   "TPT" "The Passion Translation" "en" 1849
    "TS2009" "The Scriptures 2009" "en" 316
    "WBMS" "Wycliffe's Bible with Modern Spelling" "en" 2407
    "WEBBE" "World English Bible British Edition" "en" 1204
