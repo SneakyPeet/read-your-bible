@@ -29,12 +29,14 @@
               :closure-defines {dev.firebase.core/use-auth-emulator? true
                                 dev.firebase.core/use-firestore-emulator? true
                                 dev.firebase.core/use-storage-emulator? false
-                                dev.firebase.core/use-functions-emulator-from-web? false}
+                                dev.firebase.core/use-functions-emulator-from-web? false
+                                bible.web.firebase.config/use-analytics? false}
               :build-hooks [(dev.deploy/reset-for-dev-hook)]
 }
 
         :release {:modules {:main {:entries [bible.web.core]
                                    :init-fn bible.web.core/init!}}
+                  :closure-defines {bible.web.firebase.config/use-analytics? true}
                   :build-hooks [(dev.deploy/reset-for-dev-hook) (dev.deploy/app-post-build-release-hook)]}}
 
   #_#_:functions {:target           :node-library
