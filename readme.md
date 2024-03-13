@@ -1,8 +1,6 @@
 # Shadow CLJS Firebase Start Project
 
-WORK IN PROGRESS
-
-https://clojurescript.org/guides/promise-interop#using-promises-with-core-async
+https://read-the-bible.web.app/
 
 # firebase
 

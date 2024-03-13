@@ -62,6 +62,9 @@
     [:p "Save this website to your mobile home screen to use it like a normal app"]
     [:hr]
     [:div.block [authentication.views/login-page]]
+    [:hr]
+    [:div.heading "Build by " [:a {:href "https://sneakycode.net" :target "_blank"} "Pieter"]
+     ". View on " [:a {:href "https://github.com/SneakyPeet/read-your-bible" :target "_blank"} "github"]]
     [:div {:style {:margin-bottom "5rem"}}]]])
 
 
