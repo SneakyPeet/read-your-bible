@@ -2,7 +2,6 @@
   (:require [re-frame.core :as rf]
             [bible.web.navigation.subs :as navigation.subs]
             [bible.web.navigation.routes :as navigation.routes]
-            [bible.web.navigation.events :as navigation.events]
             [bible.web.authentication.views :as authentication.views]
             [bible.web.authentication.events :as authentication.events]
             [bible.web.reading-lists.views :as reading-lists.views]
@@ -19,14 +18,14 @@
   (let [logged-in? @(rf/subscribe authentication.subs/logged-in-sub)]
     [:div
      [:section {:class (when logged-in? "section pt-0")}
-      [:div.container
+      [:div
        [:div child]]]]))
 
 
 (defn logout []
   (let [logged-in? @(rf/subscribe authentication.subs/logged-in-sub)]
     (when logged-in?
-      [:div.buttons.is-centered
+      [:div.buttons
        [:a.button
         {:on-click authentication.events/logout}
         (cn/navigation-logout)]])))
@@ -34,30 +33,32 @@
 
 (defn landing []
   [:div
-   [:div.content
-    [:div.hero.is-primary {:style {:height "100vh"}}
-     [:div.hero-body
-      [:h1.title.has-text-centered
-       {:style {:margin-top "2rem"
-                :margin-bottom "5rem"}}
-       "Welcome to the read your bible app!"]
-      [:p.has-text-centered
-       {:style {:margin-bottom "5rem"}}
-       "This app is an electronic bookmark for the"
-       " Professor Grant Horner's Bible-Reading System"]
-      #_[:div
-         [:h5 "How to use it?"]
-         [:ul
-          [:li "Read all 10 chapters as displayed on the page."]
-          [:li "You can click the name of a book to mark it as read."]
-          [:li "Click '>' to load the chapters for the next days reading."]
-          [:li "The app saves the selected day on your current device."]
-          [:li "You can also type in the day you want to jump to."]
-          [:li "The blue progress bar shows chapter progress."]
-          [:li "The green progress bar shows list progress."]
-          [:li "Once you complete a list, that list will start over."]
-          [:li "For more information, the plan can be downloaded " [:a {:href "/download.pdf" :target "_blank"} "here"] "."]]]
-      [authentication.views/login-page]]]]])
+   [:div.hero.is-primary
+    [:div.hero-body
+     [:h1.title.is-3
+      "Welcome to the read your bible app!"]
+     [:h3.sub-title.is-5
+      "An free electronic bookmark for the"
+      " Professor Grant Horner's Bible-Reading System"]]]
+   [:div.section.content
+    [:h2.title.is-4 "How does it work?"]
+    [:p [:b "Click on the next chapter to read."]" This will open the youversion app and you can pick which translation to use."]
+    [:img.mb-5 {:src "/img/step1.png" :style {:max-width "300px"}}]
+    [:p "Once you have read the chapter" [:b " click the button to mark the chapter as read."]]
+    [:img.mb-5 {:src "/img/step2.png" :style {:max-width "300px"}}]
+    [:p [:b "Read the next chapter of the next book."]" Try and read from all 10 lists in one day."]
+    [:img.mb-5 {:src "/img/step3.png" :style {:max-width "300px"}}]
+    [:p "Feel like reading more from the same book?" [:b " You can read from any list at any time."]]
+    [:img.mb-5 {:src "/img/step4.png" :style {:max-width "300px"}}]
+    [:p "Want to read a book and chapter not in the current reading list? Simply " [:b "capture the chapters you read manually."]]
+    [:img.mb-5 {:src "/img/manual-capture.png" :style {:max-width "300px"}}]
+    [:p [:b "See"] " progress for each list."]
+    [:img.mb-5 {:src "/img/list-projection.png" :style {:max-width "300px"}}]
+    [:p [:b "See"] " how much of the bible you have read."]
+    [:img.mb-5 {:src "/img/chapter-projection.png" :style {:max-width "300px"}}]
+    [:hr]
+    [:div.block [authentication.views/login-page]]
+    [:div {:style {:margin-bottom "5rem"}}]]])
 
 
 (defn loader []
@@ -69,18 +70,13 @@
 (defn app []
   (let [any-reading-lists? @(rf/subscribe [reading-lists.subs/any-sub])]
     (if any-reading-lists?
-      [:div
-       [:div.columns.mt-2
-        [:div.column.is-half
-         [:div.block
-          [reading-lists.views/reading-list]
-          [projection.views/streak]]
-         [:div
-          [:div.block [manual-entries.views/capture]]]]
-        [:div.column
-         [:div.block [projection.views/all-charts]]
-         [:div.block [preferences.views/set-translation]]
-         [logout]]]]
+      [:div.mt-2
+       [reading-lists.views/reading-list]
+       [:div.block [projection.views/streak]]
+       [:div.block [manual-entries.views/capture]]
+       [:div.block [projection.views/all-charts]]
+       [:div.block [preferences.views/set-translation]]
+       [logout]]
       [loader])))
 
 

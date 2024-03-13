@@ -4,10 +4,10 @@
 
 
 (defn login-page []
-  [:div.is-flex.is-flex-direction-column.is-align-items-center
+  [:div.is-flex.is-flex-direction-column
    [:div.content
     [:p.has-text-weight-bold (cn/login-explainer-text)]]
    [:div.buttons
     (->> authentication.events/providers
          (map (fn [{:keys [title provider]}]
-                [:button.button.is-large {:key title :on-click #(authentication.events/start-login provider)} title])))]])
+                [:button.button {:key title :on-click #(authentication.events/start-login provider)} title])))]])

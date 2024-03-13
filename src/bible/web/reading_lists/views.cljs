@@ -15,7 +15,7 @@
        (->> reading-lists
             (map (fn [{:keys [id title chapter youversion-url saturation next?]}]
                    #_(let [{:keys [currently-in-streak? total]} (get streaks id)])
-                   [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.mb-2
+                   [:div.is-flex.is-flex-wrap-nowrap.is-justify-content-space-between.is-align-items-center.pt-2.hover-me
                     {:key   id
                      :style {:border-bottom "#dbdbdb 1px solid"}}
 

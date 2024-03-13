@@ -16,7 +16,7 @@
         total-chapters (domain.books/book-total-chapters book-id)]
     [:div
      (if capturing?
-       [:div.has-text-centered
+       [:div
         [:div
          [:h3.is-size-3.has-font-weight-bold "Manual capture"]
          [:p "Pick a book and chapters to manually mark as read today"]]
@@ -28,7 +28,7 @@
              :on-change #(manual-entries.events/select-book (js/parseInt (.. % -target -value)))}
             book-options]]
           [:div.help "capture one book at a time"]]]
-        [:div.buttons.is-centered
+        [:div.buttons
          (->> (range 1 (inc total-chapters))
               (map (fn [i]
                      (let [selected? (contains? selected-chapters i)
@@ -40,11 +40,11 @@
                          :on-click #(f i)
                          :class (when selected? "is-primary")}
                         i]))))]
-        [:div.buttons.is-centered
+        [:div.buttons
          [:button.button.is-primary
           {:on-click #(manual-entries.events/capture)}
           (if (empty? selected-chapters) "Cancel" "Capture")]]]
-       [:div.buttons.is-centered
+       [:div.buttons
         [:button.button
          {:on-click #(manual-entries.events/start-capturing)}
          "Capture Manaul Entries"]]
