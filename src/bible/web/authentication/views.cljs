@@ -1,13 +1,21 @@
 (ns bible.web.authentication.views
   (:require [bible.web.authentication.events :as authentication.events]
-            [bible.web.content :as cn]))
+            ["firebase/auth" :as firebase-auth]))
 
 
 (defn login-page []
-  [:div.is-flex.is-flex-direction-column
-   [:div.content
-    [:p.has-text-weight-bold (cn/login-explainer-text)]]
-   [:div.buttons
-    (->> authentication.events/providers
-         (map (fn [{:keys [title provider]}]
-                [:button.button {:key title :on-click #(authentication.events/start-login provider)} title])))]])
+  [:div
+   [:h1.is-size-5 "Choose a login option"]
+   [:div.is-flex.is-flex-direction-column
+    {:style {:max-width "300px"}}
+    [:button.button.mb-3.is-danger {:on-click #(authentication.events/start-login (firebase-auth/GoogleAuthProvider.))} "Google"]
+    [:div.field.has-addons
+     [:div.control
+      [:a.button.is-primary
+       {:on-click #(authentication.events/start-email-authentication
+                     (.-value (js/document.getElementById "login-email")))}
+       "Send me a link"]]
+     [:div.control
+      [:input.input {:id "login-email" :type "email" :placeholder "Email"}]]]
+    [:button.button.is-warning
+     {:on-click #(authentication.events/start-anonymous-authentication)} "I just want to try it out"]]])

@@ -43,7 +43,14 @@
       (fn [firebase-user]
         (if firebase-user
           (rf/dispatch [signed-in-evt firebase-user])
-          (rf/dispatch [signed-out-evt]))))))
+          (rf/dispatch [signed-out-evt]))))
+
+    (when (firebase-auth/isSignInWithEmailLink auth js/window.location.href)
+      (let [email (js/window.prompt "Please provide your email")]
+        (-> (firebase-auth/signInWithEmailLink auth email js/window.location.href)
+            (.catch (fn [err]
+                      (js/alert (.-message err))
+                      (js/console.log err))))))))
 
 
 ;; Start login process
@@ -68,6 +75,47 @@
         #_(.catch (fn [err]
                     (prn "FAIL")
                     (js/console.log err))))))
+
+(rf/reg-event-fx
+  ::start-anonymous-authentication
+  (fn [_ _]
+    {::firebase-start-anonymous-authentication nil}))
+
+
+(defn start-anonymous-authentication []
+  (rf/dispatch-sync [::start-anonymous-authentication]))
+
+
+(rf/reg-fx
+  ::firebase-start-anonymous-authentication
+  (fn []
+    (firebase-auth/signInAnonymously auth)))
+
+
+(rf/reg-event-fx
+  ::start-email-authentication
+  (fn [_ [_ email]]
+    {::firebase-start-email-authentication email}))
+
+
+(defn start-email-authentication [email]
+  (rf/dispatch-sync [::start-email-authentication email]))
+
+
+(goog-define auth-redirect-domain "http://localhost:3020")
+
+
+(rf/reg-fx
+  ::firebase-start-email-authentication
+  (fn [email]
+    (-> (firebase-auth/sendSignInLinkToEmail auth email (clj->js {:url js/window.location.href
+                                                                  :handleCodeInApp true}))
+        (.then (fn [result]
+                 (js/alert "Check your email for a login link")
+                 (js/console.log result)))
+        (.catch (fn [err]
+                  (js/alert (.-message err))
+                  (js/console.log err))))))
 
 
 ;; Logout
