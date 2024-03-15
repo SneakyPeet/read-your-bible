@@ -78,8 +78,9 @@
 
 (rf/reg-event-fx
   ::start-anonymous-authentication
-  (fn [_ _]
-    {::firebase-start-anonymous-authentication nil}))
+  (fn [{:keys [db]} _]
+    {:db (authentication.state/make-anonymous db)
+     ::firebase-start-anonymous-authentication nil}))
 
 
 (defn start-anonymous-authentication []

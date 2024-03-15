@@ -4,7 +4,8 @@
 (defn initial-state [logged-in-event logged-out-event]
   {::user nil
    ::logged-in-event logged-in-event
-   ::logged-out-event logged-out-event})
+   ::logged-out-event logged-out-event
+   ::anonymous? false})
 
 
 (defn logged-in-event [db]
@@ -29,3 +30,11 @@
 
 (defn logged-in? [db]
   (some? (user-id db)))
+
+
+(defn make-anonymous [db]
+  (assoc db ::anonymous? true))
+
+
+(defn anonymous? [db]
+  (::anonymous? db))

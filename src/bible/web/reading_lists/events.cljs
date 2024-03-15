@@ -55,13 +55,16 @@
     (let [{:keys [read-list-mutations
                   event-mutations
                   projection-mutations]} (reading-lists.db/default-reading-list-mutations
-                                           (authentication.state/user-id db) read-index)]
-      {:goto navigation.routes/dashboard-page
-       :db (reading-lists.state/prevent-increment db)
-       ::firestore-fx/write-batch
-       {:mutations (concat read-list-mutations projection-mutations)}
-       ::firestore-fx/write-batches
-       {:mutations event-mutations}})))
+                                           (authentication.state/user-id db) read-index)
+          anonymous? (authentication.state/anonymous? db)]
+      (cond-> 
+          {:goto navigation.routes/dashboard-page
+           :db   (reading-lists.state/prevent-increment db)
+           ::firestore-fx/write-batch
+           {:mutations (concat read-list-mutations projection-mutations)}}
+
+        (not anonymous?)
+        (assoc ::firestore-fx/write-batches {:mutations event-mutations})))))
 
 
 (defn create-initial-reading-lists [read-index]
