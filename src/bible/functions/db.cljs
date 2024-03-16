@@ -4,6 +4,3 @@
 
 (defn db [] (firestore/getFirestore))
 
-(defn global-projections-collection []
-  (-> (db)
-      (.collection "global-projections")))
