@@ -16,6 +16,8 @@ npx firebase deploy --only hosting --project bible-reading-plan
 
 npx shadow-cljs release web && cd firebase && npx firebase deploy --only hosting --project bible-reading-plan && cd ..
 
+npx shadow-cljs release functions && cd firebase && firebase deploy --only functions && cd ..
+
 # Shaddow CLJS
 
 ## compile a build once and exit
@@ -23,6 +25,8 @@ $ npx shadow-cljs compile web
 
 ## compile and watch
 $ npx shadow-cljs watch web
+
+$ npx shadow-cljs watch functions
 
 ## connect to REPL for the build (available while watch is running)
 $ npx shadow-cljs cljs-repl web

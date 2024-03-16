@@ -31,16 +31,15 @@
                                 dev.firebase.core/use-storage-emulator? false
                                 dev.firebase.core/use-functions-emulator-from-web? false
                                 bible.web.firebase.config/use-analytics? false}
-              :build-hooks [(dev.deploy/reset-for-dev-hook)]
-}
+              :build-hooks [(dev.deploy/reset-for-dev-hook)]}
 
         :release {:modules {:main {:entries [bible.web.core]
                                    :init-fn bible.web.core/init!}}
                   :closure-defines {bible.web.firebase.config/use-analytics? true}
                   :build-hooks [(dev.deploy/reset-for-dev-hook) (dev.deploy/app-post-build-release-hook)]}}
 
-  #_#_:functions {:target           :node-library
-                  :js-options       {:js-package-dirs ["firebase/functions/node_modules"]}
-                  :compiler-options {:infer-externs :auto}
-                  :output-to        "firebase/functions/index.js"
-                  :exports-var      feedme.functions/exports}}}
+  :functions {:target           :node-library
+              :js-options       {:js-package-dirs ["firebase/functions/node_modules"]}
+              :compiler-options {:infer-externs :auto}
+              :output-to        "firebase/functions/index.js"
+              :exports-var      bible.functions.core/exports}}}
