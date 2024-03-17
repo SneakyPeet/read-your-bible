@@ -10,19 +10,20 @@
       (.collection "daily-read-stats")))
 
 
-(defn- doc-ref [date]
-  (.doc (collection) (str (.-seconds date))))
+(defn- get-doc-ref [^firestore/Timestamp date]
+  (let [id (.toISOString (.toDate date))]
+    (.doc (collection) id)))
 
 
-(defn midnight []
+(defn get-midnight []
   (let [d (.toDate (firestore/Timestamp.now))]
     (.setHours d 0 0 0 0)
     (firestore/Timestamp.fromDate d)))
 
 
 (defn- function [evt]
-  (let [midnight (midnight)
-        doc-ref (doc-ref midnight)
+  (let [midnight (get-midnight)
+        doc-ref (get-doc-ref midnight)
         user-id (.get evt.data "user-id")
         evt-type (.get evt.data "type")
         evt-id (.get evt.data "id")]
@@ -34,13 +35,12 @@
               (-> transaction
                   (.get doc-ref)
                   (.then (fn [doc]
-                           (if (.-exists doc)
-                             (let [data (js->clj (.data doc))
-                                   users (-> (get data "users" (get data :users []))
+                           (if-let [data (js->clj (.data doc))]
+                             (let [users (-> (get data "users")
                                              set
                                              (conj user-id)
                                              vec)
-                                   events (-> (get data "events" (get data :events []))
+                                   events (-> (get data "events")
                                               set
                                               (conj evt-id)
                                               vec)]
@@ -50,22 +50,18 @@
                                                   :events events
                                                   :total-users (count users)
                                                   :total-events (count events)})))
-                             (do
-                               (js/console.log "New Day!")
-                               (.set transaction
-                                     doc-ref
-                                     (clj->js {:date         midnight
-                                               :users        [user-id]
-                                               :events       [evt-id]
-                                               :total-users  1
-                                               :total-events 1})))))))))
+                             (.set transaction
+                                   doc-ref
+                                   (clj->js {:date         midnight
+                                             :users        [user-id]
+                                             :events       [evt-id]
+                                             :total-users  1
+                                             :total-events 1}))))))))
           (.then (fn [_]))
           (.catch (fn [err]
                     (js/console.error err)
                     (js/Promise.reject err))))
-      (js/Promise.resolve()))
-
-    ))
+      (js/Promise.resolve()))))
 
 
 (def export (firestore-fn/onDocumentCreated "read-events/{docId}" function))
