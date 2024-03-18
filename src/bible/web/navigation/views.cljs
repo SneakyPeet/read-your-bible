@@ -11,6 +11,7 @@
             [bible.web.projections.views :as projection.views]
             [bible.web.preferences.views :as preferences.views]
             [bible.web.manual-entires.views :as manual-entries.views]
+            [bible.web.global-projections.views :as global-projections.views]
             [bible.web.content :as cn]))
 
 
@@ -80,8 +81,9 @@
       [:div.mt-2
        [reading-lists.views/reading-list]
        [:div.block [projection.views/streak]]
-       [:div.block [manual-entries.views/capture]]
+       [:div.block.has-text-right [global-projections.views/daily-read-stat]]
        [:div.block [projection.views/all-charts]]
+       [:div.block [manual-entries.views/capture]]
        [:div.block [preferences.views/set-translation]]
        [logout]]
       [loader])))

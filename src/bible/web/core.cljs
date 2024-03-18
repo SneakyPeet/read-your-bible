@@ -25,6 +25,9 @@
 
             [bible.web.manual-entires.state :as manual-entries.state]
 
+            [bible.web.global-projections.state :as global-projections.state]
+            [bible.web.global-projections.events :as global-projections.events]
+
             [bible.web.firebase.firestore :as firestore-fx]))
 
 
@@ -37,7 +40,8 @@
     (reading-lists.state/initial-state)
     (projections.state/initial-state)
     (preferences.state/initial-state)
-    (manual-entries.state/initial-state)))
+    (manual-entries.state/initial-state)
+    (global-projections.state/initial-state)))
 
 
 (rf/reg-event-fx
@@ -60,7 +64,8 @@
     {:goto  navigation.routes/dashboard-page
      :dispatch-n [reading-lists.events/initialize-lists-event
                   projections.events/initialize-projections-event
-                  preferences.events/initialize-preferences-event]}))
+                  preferences.events/initialize-preferences-event
+                  global-projections.events/initialize-daily-read-stat-event]}))
 
 
 (rf/reg-event-fx
